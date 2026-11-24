@@ -54,7 +54,7 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
 .btn svg, .pill svg, .vb svg { width: 16px; height: 16px; flex: none; }
 
 /* info card */
-#panel { position: fixed; z-index: 4; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); width: min(400px, calc(100vw - 32px)); padding: 20px 24px 20px; display: grid; gap: 12px; }
+#panel { position: fixed; z-index: 4; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 116px); width: min(400px, calc(100vw - 32px)); padding: 20px 24px 20px; display: grid; gap: 12px; }
 #panel .eyebrow { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 #panel h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5vw, 50px); line-height: 0.98; letter-spacing: -0.01em; text-wrap: balance; }
 #panel .sub { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.4; text-wrap: balance; }
@@ -122,6 +122,43 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
 #contact .num { font-family: var(--font-data); font-size: 20px; user-select: all; }
 #loading { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; background: var(--bg); font-family: var(--font-data); font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
 
+/* selection: breadcrumb, detail card, spaces list, pinned labels */
+#crumbs { position: fixed; z-index: 5; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 66px); display: flex; align-items: center; gap: 2px; padding: 4px; max-width: calc(100vw - 32px); overflow-x: auto; scrollbar-width: none; border-radius: 999px; }
+#crumbs::-webkit-scrollbar { display: none; }
+#crumbs button { border: 0; background: transparent; padding: 6px 11px; border-radius: 999px; font-size: 13px; color: var(--muted); white-space: nowrap; min-height: 32px; }
+#crumbs button:hover { color: var(--fg); }
+#crumbs button[aria-current="page"] { background: #fff; color: var(--fg); font-weight: 600; box-shadow: 0 1px 4px rgba(31,38,43,.12); }
+#crumbs .chev { color: var(--muted); font-size: 12px; flex: none; }
+#detail { position: fixed; z-index: 4; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 116px); width: min(400px, calc(100vw - 32px)); max-height: calc(100vh - 250px); overflow-y: auto; padding: 18px 22px; display: grid; gap: 10px; }
+#detail .eyebrow { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+#detail h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(32px, 4.2vw, 44px); line-height: 1; letter-spacing: -0.01em; text-wrap: balance; }
+#detail .sub { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.4; }
+#dDims { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+#dDims th { text-align: left; font-weight: 500; color: var(--muted); padding: 6px 10px 6px 0; vertical-align: top; white-space: nowrap; border-top: 1px solid var(--line); }
+#dDims td { padding: 6px 0; vertical-align: top; font-variant-numeric: tabular-nums; border-top: 1px solid var(--line); }
+#dDims td small { display: block; color: var(--muted); font-size: 11.5px; margin-top: 1px; }
+#dDims td:last-child { text-align: right; padding-left: 8px; }
+.src { display: inline-block; font: 500 10px var(--font-data); letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; cursor: help; }
+.src.s-sheet { color: #2e5d3f; border-color: rgba(46,93,63,.35); background: rgba(46,125,79,.08); }
+.src.s-scaled, .src.s-assumed { color: var(--warn-fg); border-color: rgba(122,74,6,.3); background: var(--warn-bg); }
+.src.s-proposed { color: #1f4f86; border-color: rgba(31,95,168,.35); background: rgba(31,95,168,.08); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { border: 1px solid var(--line); background: rgba(255,255,255,.75); border-radius: 999px; padding: 6px 11px; font-size: 13px; min-height: 34px; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.rl, .sl { pointer-events: auto; cursor: pointer; }
+.rl:hover { border-color: var(--accent); }
+.rl.faded { opacity: .6; }
+.sl { padding: 4px 10px; border-radius: 999px; background: rgba(31,38,43,.84); color: #f8f6f1; font-size: 12px; font-weight: 500; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.sl.on { background: var(--accent); }
+.zl { font: 500 10.5px var(--font-data); padding: 2px 6px; border-radius: 4px; background: rgba(248,246,241,.92); border-left: 3px solid var(--zc, #555); color: #22303a; font-variant-numeric: tabular-nums; }
+#spaces { position: fixed; z-index: 7; left: 50%; transform: translateX(-50%); bottom: calc(env(safe-area-inset-bottom, 0px) + 86px); width: min(420px, calc(100vw - 32px)); max-height: min(62vh, 540px); overflow-y: auto; padding: 10px; }
+#spaces .head { display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 8px; font-weight: 600; font-size: 14px; }
+#spaces .head button { border: 0; background: transparent; color: var(--muted); font-size: 13px; padding: 6px 8px; min-height: 32px; }
+#spList, #spList ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+#spList button { width: 100%; text-align: left; border: 0; background: transparent; padding: 9px 10px; border-radius: 10px; font-size: 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-height: 40px; }
+#spList button:hover, #spList button[aria-current="true"] { background: rgba(29,34,38,.07); }
+#spList ul button { padding-left: 26px; font-size: 13px; color: var(--muted); min-height: 36px; }
+#spList small { font-family: var(--font-data); color: var(--muted); font-size: 11.5px; white-space: nowrap; }
 @media (max-width: 760px) {
   #brand { font-size: 20px; }
   .btn .lbl { display: none; }
@@ -136,6 +173,14 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
   #mini canvas { width: 104px; height: 125px; }
   #mini small { display: none; }
   #card { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 168px); }
+  #crumbs { top: calc(env(safe-area-inset-top, 0px) + 104px); }
+  #detail { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 168px); max-height: 40vh; padding: 14px 16px; }
+  #detail h1 { font-size: 26px; }
+  #detail { gap: 6px; max-height: 34vh; }
+  #detail .sub, #dNote { display: none; }
+  #dDims { font-size: 12.5px; } #dDims th, #dDims td { padding-block: 3px; } #dDims td small { display: none; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; } .chips button { white-space: nowrap; flex: none; }
+  #spacesBtn { order: -1; }
 }
 @media (prefers-reduced-motion: reduce) { #card, #hint, #roomTag { transition: none; } }
 </style>
@@ -159,6 +204,8 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
   </nav>
 </header>
 
+<nav id="crumbs" class="glass ov-only" aria-label="Where you are"></nav>
+
 <section id="panel" class="glass ov-only" aria-labelledby="pTitle">
   <div class="eyebrow"><span id="pEyebrow">Sheet A-01/00 · Rev Oct 2025</span><span>1 : 100</span></div>
   <h1 id="pTitle">Second Floor</h1>
@@ -168,9 +215,20 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
     <button class="pill dark" id="walkBtn2" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.8"/><path d="m9 21 2-6-2-3 1-4h3l3 4M11 15l3 2v4"/></svg>Walk through</button>
     <button class="pill" id="tourBtn2" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Guided tour</button>
   </div>
+  <p class="note" id="pHint"><b>Click or tap any room</b> to explore it, or open <b>Spaces</b> for the full list of rooms and sections.</p>
   <hr>
   <div id="facts"></div>
   <p class="note" id="pNote"></p>
+</section>
+
+<section id="detail" class="glass ov-only" hidden aria-live="polite" aria-labelledby="dTitle">
+  <div class="eyebrow"><span id="dKind">Room</span><span id="dScale"></span></div>
+  <h1 id="dTitle"></h1>
+  <p class="sub" id="dSub"></p>
+  <table id="dDims"></table>
+  <p class="note" id="dNote"></p>
+  <div class="chips" id="dSecs" role="group" aria-label="Sections"></div>
+  <div class="actions"><button class="pill" type="button" id="dTop">Top view</button><button class="pill" type="button" id="dUp">Back</button></div>
 </section>
 
 <div id="roomTag" style="opacity:0"></div>
@@ -200,15 +258,21 @@ body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none 
       <button type="button" data-preset="side" aria-pressed="false">Side</button>
     </div>
     <span class="sep ov-only"></span>
-    <button type="button" class="vb ov-only" id="rotBtn" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>Rotate</button>
+    <button type="button" class="vb ov-only" id="rotBtn" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>Rotate</button>
     <button type="button" class="vb ov-only" id="roomsBtn" aria-pressed="true">Rooms</button>
     <button type="button" class="vb ov-only" id="dimsBtn" aria-pressed="true">Dimensions</button>
+    <button type="button" class="vb ov-only" id="spacesBtn" aria-expanded="false" aria-controls="spaces"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Spaces</button>
     <button type="button" class="vb walk-only" id="backBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 3.5h17v17h-17z"/><path d="M3.5 12h7v8.5M10.5 3.5V9"/></svg>Back to model</button>
     <span class="sep"></span>
     <button type="button" class="pill dark ov-only" id="walkBtn">Walk through</button>
     <button type="button" class="pill" id="tourBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="tourLbl">Start Tour</span></button>
   </nav>
 </footer>
+
+<section id="spaces" class="glass ov-only" hidden aria-label="Rooms and sections">
+  <div class="head"><span>Rooms and sections</span><button type="button" id="spClose">Close</button></div>
+  <ul id="spList"></ul>
+</section>
 
 <section class="sheet" id="info" hidden aria-labelledby="iTitle">
   <div class="glass">
@@ -241,7 +305,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 /* ---------------------------------------------------------------- data */
-const PLAN = {"meta":{"title":"Second floor - Option A, enclosed laundry + food storage","change_note":"Option A, the owner's change, encloses the sheet's open laundry behind the railing with walls and windows, and splits it into a Food Storage room and a Laundry room. This change is not on the architect's sheet yet.","status":"DRAFT","scale":50,"north_deg":null,"source":"sheet A-01/00 photo; written dimensions plus scaled values, see header","ceiling_height_assumed":2700,"wall_t_exterior_assumed":150,"wall_t_interior_assumed":100,"trace":{"image":"site/measurements/A-01-00_second-floor-plan_REV-OCT2025_photo-b.jpg","origin_px":[590,2320],"px_per_m_x":116.3,"px_per_m_y":115.7,"shear_px_per_px":0.0244}},"rooms":[{"id":"living","name":"Living","polygon":[[3970,0],[8480,0],[9490,1430],[9490,5150],[10140,5720],[3970,5720]],"ceiling_height":null},{"id":"dining","name":"Dining","polygon":[[3970,5720],[10140,5720],[10290,5850],[10290,8350],[9490,8980],[3970,8980]],"ceiling_height":null},{"id":"storage","name":"Food Storage","polygon":[[3970,8980],[5970,8980],[5970,11600],[3970,11600]],"ceiling_height":null},{"id":"laundry","name":"Laundry","wet":true,"polygon":[[5970,8980],[9490,8980],[9490,11600],[5970,11600]],"ceiling_height":null},{"id":"kitchen","name":"Kitchen","polygon":[[0,0],[3970,0],[3970,5090],[0,5090]],"ceiling_height":null},{"id":"hall","name":"Hall","polygon":[[2800,5090],[3970,5090],[3970,6590],[2800,6590]],"ceiling_height":null},{"id":"tb2","name":"Toilet & Bath 2","wet":true,"polygon":[[0,5090],[2800,5090],[2800,6590],[0,6590]],"ceiling_height":null},{"id":"bedroom","name":"Bedroom 01","polygon":[[0,6590],[3970,6590],[3970,11600],[1910,11600],[1910,10200],[-990,10200],[-990,8480],[0,7180]],"ceiling_height":null},{"id":"tb1","name":"Toilet & Bath 1","wet":true,"polygon":[[-990,10200],[1910,10200],[1910,11600],[-490,11600],[-990,11100]],"ceiling_height":null},{"id":"porch","name":"Second Floor Porch","polygon":[[4250,-1430],[5500,-1430],[5500,0],[4250,0]],"ceiling_height":null,"outdoor":true}],"walls":[{"id":"N1a","from":[-990,11100],"to":[-840,11450],"t":150},{"id":"N1b","from":[-840,11450],"to":[-490,11600],"t":150},{"id":"N1","from":[-490,11600],"to":[1910,11600],"t":150},{"id":"N2","from":[1910,11600],"to":[3970,11600],"t":150},{"id":"NL","from":[3970,11600],"to":[9490,11600],"t":150},{"id":"EL","from":[9490,11600],"to":[9490,8980],"t":150},{"id":"E1","from":[9490,8980],"to":[10290,8350],"t":150},{"id":"E2","from":[10290,8350],"to":[10290,5850],"t":150},{"id":"E3","from":[10290,5850],"to":[9490,5150],"t":150},{"id":"E4","from":[9490,5150],"to":[9490,1430],"t":150},{"id":"E5","from":[9490,1430],"to":[8480,0],"t":150},{"id":"S1","from":[8480,0],"to":[3970,0],"t":150},{"id":"S2","from":[3970,0],"to":[0,0],"t":150},{"id":"W1","from":[0,0],"to":[0,7180],"t":150},{"id":"W2","from":[0,7180],"to":[-990,8480],"t":150},{"id":"W3","from":[-990,8480],"to":[-990,11100],"t":150},{"id":"P1","from":[3970,11600],"to":[3970,5720],"t":100},{"id":"P2","from":[3970,3950],"to":[3970,0],"t":100},{"id":"LD","from":[3970,8980],"to":[9490,8980],"t":100},{"id":"SL","from":[5970,8980],"to":[5970,11600],"t":100},{"id":"B1S","from":[-990,10200],"to":[2670,10200],"t":100},{"id":"B1E","from":[1910,11600],"to":[1910,10200],"t":100},{"id":"BRS","from":[0,6590],"to":[3970,6590],"t":100},{"id":"T2E","from":[2800,6590],"to":[2800,5090],"t":100},{"id":"T2P","from":[1170,6590],"to":[1170,5090],"t":100},{"id":"T2S","from":[0,5090],"to":[2800,5090],"t":100},{"id":"B1G","from":[0,11600],"to":[0,10200],"t":20,"kind":"glass"},{"id":"PE","from":[5500,0],"to":[5500,-2700],"t":150},{"id":"PR","from":[4250,-1430],"to":[5500,-1430],"t":50,"kind":"railing"},{"id":"SW","from":[0,0],"to":[0,-2700],"t":150},{"id":"SS","from":[1000,-2700],"to":[5500,-2700],"t":150}],"columns":[{"at":[0,11600],"size":300},{"at":[3970,11600],"size":300},{"at":[8480,11600],"size":300},{"at":[0,5540],"size":300},{"at":[3970,3950],"size":300},{"at":[8480,5720],"size":300},{"at":[3970,6960],"size":150},{"at":[0,0],"size":350,"round":true},{"at":[3970,0],"size":350,"round":true},{"at":[8480,0],"size":350,"round":true}],"openings":[{"id":"D-entry","wall":"S1","type":"door","offset":3230,"width":870,"height":2100,"hinge":"end","swing":"right","note":"from porch into living"},{"id":"D-bed","wall":"BRS","type":"door","offset":2970,"width":750,"height":2100,"hinge":"end","swing":"left"},{"id":"D-tb1","wall":"B1E","type":"door","offset":640,"width":700,"height":2100,"hinge":"end","swing":"right"},{"id":"D-tb2","wall":"T2E","type":"door","offset":200,"width":700,"height":2100,"hinge":"start","swing":"right","note":"exact door unclear on sheet"},{"id":"D-tb2wc","wall":"T2P","type":"door","offset":200,"width":600,"height":2100,"hinge":"start","swing":"right","note":"assumed"},{"id":"D-sto","wall":"LD","type":"door","offset":160,"width":800,"height":2100,"hinge":"start","swing":"left","note":"the sheet's laundry door, now food storage"},{"id":"D-lau","wall":"LD","type":"door","offset":4480,"width":800,"height":2100,"hinge":"end","swing":"left","note":"OPTION A new door"},{"id":"W-liv-s","wall":"S1","type":"window","offset":280,"width":1990,"height":1200,"sill":900,"room":"living"},{"id":"W-liv-e","wall":"E4","type":"window","offset":300,"width":3120,"height":1500,"sill":600,"room":"living"},{"id":"W-liv-se","wall":"E5","type":"window","offset":300,"width":1150,"height":1500,"sill":600,"room":"living"},{"id":"W-din-e","wall":"E2","type":"window","offset":200,"width":2100,"height":1500,"sill":600,"room":"dining"},{"id":"W-din-l","wall":"LD","type":"window","offset":2430,"width":1840,"height":600,"sill":1500,"room":"dining","note":"OPTION A high borrowed-light window into the laundry"},{"id":"W-sto","wall":"NL","type":"window","offset":700,"width":800,"height":500,"sill":1600,"room":"storage","note":"OPTION A high vent window"},{"id":"W-lau-n","wall":"NL","type":"window","offset":2580,"width":1500,"height":900,"sill":1100,"room":"laundry","note":"OPTION A"},{"id":"W-lau-e","wall":"EL","type":"window","offset":300,"width":1100,"height":800,"sill":1200,"room":"laundry","note":"OPTION A above the washers"},{"id":"W-kit-w","wall":"W1","type":"window","offset":1000,"width":1000,"height":1000,"sill":1050,"room":"kitchen","note":"over sink"},{"id":"W-kit-s","wall":"S2","type":"window","offset":1700,"width":770,"height":600,"sill":1500,"room":"kitchen","note":"behind range per sheet ticks; check"},{"id":"W-nook","wall":"N2","type":"window","offset":20,"width":900,"height":1000,"sill":1000,"room":"bedroom"},{"id":"W-tb1","wall":"N1","type":"window","offset":1500,"width":800,"height":500,"sill":1600,"room":"tb1"}],"furniture":[{"name":"Wardrobe","type":"wardrobe","rect":[-920,8040,390,1990],"h":2100,"face":"east","room":"bedroom"},{"name":"Headboard cabinet","type":"cabinet","rect":[-530,9550,3210,480],"h":900,"face":"south","room":"bedroom"},{"name":"Bed 1","type":"bed","rect":[-530,7980,1240,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Bed 2","type":"bed","rect":[1480,7980,1200,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Night table","type":"sidetable_round","rect":[830,8950,450,450],"h":550,"room":"bedroom"},{"name":"Wardrobe S","type":"wardrobe","rect":[130,6640,2670,450],"h":2100,"face":"north","room":"bedroom"},{"name":"Vanity desk","type":"desk","rect":[1990,11100,1880,420],"h":750,"face":"south","room":"bedroom"},{"name":"WC","type":"wc","rect":[150,11000,400,600],"h":400,"face":"south","rot":0,"room":"tb1"},{"name":"Lavatory","type":"lavatory","rect":[1050,11100,700,450],"h":850,"face":"south","room":"tb1"},{"name":"Shower 1","type":"shower","rect":[-940,10260,900,1300],"h":0,"room":"tb1"},{"name":"WC 2","type":"wc","rect":[380,5140,400,600],"h":400,"face":"north","room":"tb2"},{"name":"Shower 2","type":"shower","rect":[1250,5140,1500,1400],"h":0,"room":"tb2"},{"name":"Pantry","type":"counter","rect":[50,4460,2750,480],"h":900,"face":"south","upper":true,"room":"kitchen"},{"name":"Ref","type":"fridge","rect":[100,3470,650,760],"h":1800,"face":"east","room":"kitchen"},{"name":"Counter W","type":"counter","rect":[100,600,550,2870],"h":900,"face":"east","upper":true,"room":"kitchen"},{"name":"Sink","type":"sink","rect":[130,1000,500,960],"h":900,"face":"east","room":"kitchen"},{"name":"Counter S","type":"counter","rect":[100,50,3590,550],"h":900,"face":"north","room":"kitchen"},{"name":"Range","type":"range","rect":[1550,50,690,550],"h":900,"face":"north","room":"kitchen"},{"name":"Peninsula","type":"counter","rect":[3130,600,560,2180],"h":900,"face":"west","room":"kitchen"},{"name":"Island","type":"island","rect":[1520,1350,830,1500],"h":900,"room":"kitchen"},{"name":"Bench 1","type":"bench","rect":[4040,2840,300,840],"h":450,"face":"east","room":"living"},{"name":"Bench 2","type":"bench","rect":[4040,2000,300,840],"h":450,"face":"east","room":"living"},{"name":"Shoe rack","type":"cabinet","rect":[4040,60,300,1940],"h":1000,"face":"east","room":"living"},{"name":"TV console","type":"console","rect":[5950,80,2150,380],"h":500,"face":"north","room":"living"},{"name":"Sofa","type":"sofa","rect":[6290,3420,1780,800],"h":800,"face":"south","room":"living"},{"name":"Side table L","type":"sidetable","rect":[5640,3380,470,490],"h":550,"room":"living"},{"name":"Side table R","type":"sidetable","rect":[8110,3380,470,490],"h":550,"room":"living"},{"name":"Armchair 1","type":"armchair","rect":[5520,2160,790,830],"h":800,"face":"east","room":"living"},{"name":"Armchair 2","type":"armchair","rect":[5520,1300,790,790],"h":800,"face":"east","room":"living"},{"name":"Armchair 3","type":"armchair","rect":[8100,2200,790,800],"h":800,"face":"west","room":"living"},{"name":"Armchair 4","type":"armchair","rect":[8100,1300,790,800],"h":800,"face":"west","room":"living"},{"name":"Coffee table","type":"coffeetable","rect":[6920,1660,580,1040],"h":420,"room":"living"},{"name":"Dining table","type":"diningtable","rect":[6020,6620,2110,1060],"h":750,"seats":8,"room":"dining"},{"name":"Washer 1","type":"washer","rect":[8620,10830,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Washer 2","type":"washer","rect":[8620,10140,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Laundry tub","type":"tub","rect":[6300,11000,470,520],"h":850,"face":"south","room":"laundry"},{"name":"Folding counter","type":"counter","rect":[6800,10920,1600,600],"h":900,"face":"south","room":"laundry"},{"name":"Shelving N","type":"shelving","rect":[4050,11075,1850,450],"h":2100,"face":"south","room":"storage"},{"name":"Shelving W","type":"shelving","rect":[4045,9900,450,1175],"h":2100,"face":"east","room":"storage"},{"name":"Chest freezer","type":"freezer","rect":[5250,9400,650,700],"h":850,"face":"west","room":"storage"}],"dimensions":[{"sheet":1.17,"from":[0,11600],"to":[1170,11600],"at":12550},{"sheet":1.5,"from":[1170,11600],"to":[2670,11600],"at":12550},{"sheet":1.3,"from":[2670,11600],"to":[3970,11600],"at":12550},{"sheet":2.9,"from":[-990,11100],"to":[1910,11600],"at":13150,"axis":"x"},{"sheet":2.06,"from":[1910,11600],"to":[3970,11600],"at":13150},{"sheet":5.52,"from":[3970,11600],"to":[9490,11600],"at":13150},{"sheet":0.8,"from":[9490,11600],"to":[10290,8350],"at":13150,"axis":"x"},{"sheet":10.48,"from":[-990,11100],"to":[9490,11600],"at":13750,"axis":"x"},{"sheet":1.4,"from":[-490,11600],"to":[-990,10200],"at":-1950,"axis":"y"},{"sheet":3.61,"from":[-990,10200],"to":[0,6590],"at":-1950,"axis":"y"},{"sheet":1.5,"from":[0,6590],"to":[0,5090],"at":-1950},{"sheet":5.1,"from":[0,5090],"to":[0,0],"at":-1950,"note":"The sheet's west chain 1.40 + 3.61 + 1.50 + 5.10 adds up to 11.61, but the overall is printed 11.60. One link is 10 mm out; ask the architect which."},{"sheet":1.43,"from":[0,0],"to":[0,-1430],"at":-1950},{"sheet":1.27,"from":[0,-1430],"to":[0,-2700],"at":-1950},{"sheet":11.6,"from":[-490,11600],"to":[0,0],"at":-2550,"axis":"y"},{"sheet":2.7,"from":[0,0],"to":[0,-2700],"at":-2550},{"sheet":2.62,"from":[9490,11600],"to":[9490,8980],"at":11150},{"sheet":3.26,"from":[9490,8980],"to":[10141,5720],"at":11150,"axis":"y"},{"sheet":1.59,"from":[10141,5720],"to":[9490,4130],"at":11150,"axis":"y"},{"sheet":4.13,"from":[9490,4130],"to":[8480,0],"at":11150,"axis":"y"},{"sheet":11.6,"from":[9490,11600],"to":[8480,0],"at":11750,"axis":"y"},{"sheet":1.0,"from":[0,-2700],"to":[1000,-2700],"at":-3800},{"sheet":3.25,"from":[1000,-2700],"to":[4250,-2700],"at":-3800},{"sheet":1.25,"from":[4250,-2700],"to":[5500,-2700],"at":-3800},{"sheet":2.98,"from":[5500,-2700],"to":[8480,0],"at":-3800,"axis":"x"},{"sheet":5.5,"from":[0,-2700],"to":[5500,-2700],"at":-4400}],"decor":{"rugs":[[7210,2250,3100,2400],[7075,7150,3200,2400],[1075,7540,2600,800]],"plants":[[8720,720,1],[9950,8000,1.1],[3750,10780,0.8],[5250,-1200,0.75],[4500,4450,0.95]],"floor_lamps":[[5200,3250]],"art":[[4025,2900,"east",1.3,0.9,1.55,1],[4025,7300,"east",1.6,1.05,1.55,2],[1075,10145,"south",1.5,0.7,1.45,3],[3915,6100,"west",0.55,0.75,1.5,4]]},"tour":{"path":[{"at":[4870,-900],"stop":"porch"},{"at":[4820,500]},{"at":[5000,1300],"stop":"living","look":[7400,2600]},{"at":[4750,2300]},{"at":[4750,3800]},{"at":[5300,4500]},{"at":[5200,5600]},{"at":[5000,6600],"stop":"dining","look":[9200,7200]},{"at":[4550,8650]},{"at":[4600,9350]},{"at":[4800,9650],"stop":"storage","look":[4700,11300]},{"at":[4600,9350]},{"at":[4550,8650]},{"at":[5300,8680]},{"at":[8200,8680]},{"at":[8850,8700]},{"at":[8850,9650],"stop":"laundry","look":[8300,11200]},{"at":[8850,8700]},{"at":[9600,7000]},{"at":[9100,5300]},{"at":[4700,5300]},{"at":[3350,4950]},{"at":[2900,3500],"stop":"kitchen","look":[1500,1200]},{"at":[3350,4950]},{"at":[3350,6150],"stop":"hall","look":[1800,5800]},{"at":[3350,7300]},{"at":[3300,9000],"stop":"bedroom","look":[0,8800]},{"at":[3300,10450]},{"at":[2400,10630]},{"at":[1450,10610],"stop":"tb1","look":[-500,11000]}],"points":{"porch":"Arrival from the exterior stair, straight into the living room.","living":"Glazing on two sides plus a splayed corner window.","dining":"Bay window projects 0.80 m past the line of the house.","storage":"Enclosed food storage by the dining door, with shelving on two walls and a chest freezer.","laundry":"Enclosed laundry with two washers, a tub and a folding counter, and windows on two sides.","kitchen":"L-shaped counter with a separate island and pantry wall.","hall":"Shared Toilet & Bath 2 off a private hall.","bedroom":"Twin beds, built-in wardrobes on two walls and a vanity nook.","tb1":"Ensuite with a walk-in shower behind glass."},"welcome":{"project":"Second Floor Renovation","subtitle":"Option A, with the laundry balcony enclosed as a food storage room and a laundry room","address":"","price":"","contact_name":"","contact_phone":""}}};
+const PLAN = {"meta":{"title":"Second floor - Option A, enclosed laundry + food storage","change_note":"Option A, the owner's change, encloses the sheet's open laundry behind the railing with walls and windows, and splits it into a Food Storage room and a Laundry room. This change is not on the architect's sheet yet.","status":"DRAFT","scale":50,"north_deg":null,"source":"sheet A-01/00 photo; written dimensions plus scaled values, see header","ceiling_height_assumed":2700,"wall_t_exterior_assumed":150,"wall_t_interior_assumed":100,"trace":{"image":"site/measurements/A-01-00_second-floor-plan_REV-OCT2025_photo-b.jpg","origin_px":[590,2320],"px_per_m_x":116.3,"px_per_m_y":115.7,"shear_px_per_px":0.0244}},"rooms":[{"id":"living","name":"Living","dims":[["Width",5.52,"sheet"],["Depth",5.72,"sheet","4.13 + 1.59"]],"polygon":[[3970,0],[8480,0],[9490,1430],[9490,5150],[10140,5720],[3970,5720]],"ceiling_height":null},{"id":"dining","name":"Dining","view_from":"s","dims":[["Width",5.52,"sheet"],["Bay projection",0.8,"sheet"],["Depth",3.26,"sheet"]],"polygon":[[3970,5720],[10140,5720],[10290,5850],[10290,8350],[9490,8980],[3970,8980]],"ceiling_height":null},{"id":"storage","name":"Food Storage","dims":[["Width",2.0,"proposed"],["Depth",2.62,"sheet"],["Clear inside","1.95 x 2.50 m","assumed","depends on wall thickness"]],"polygon":[[3970,8980],[5970,8980],[5970,11600],[3970,11600]],"ceiling_height":null},{"id":"laundry","name":"Laundry","dims":[["Width",3.52,"proposed"],["Depth",2.62,"sheet"],["Clear inside","3.40 x 2.50 m","assumed","depends on wall thickness"]],"wet":true,"polygon":[[5970,8980],[9490,8980],[9490,11600],[5970,11600]],"ceiling_height":null},{"id":"kitchen","name":"Kitchen","dims":[["Width",3.97,"sheet","1.17 + 1.50 + 1.30"],["Depth",5.1,"sheet"]],"polygon":[[0,0],[3970,0],[3970,5090],[0,5090]],"ceiling_height":null},{"id":"hall","name":"Hall","dims":[["Width",1.17,"scaled"],["Depth",1.5,"sheet"]],"polygon":[[2800,5090],[3970,5090],[3970,6590],[2800,6590]],"ceiling_height":null},{"id":"tb2","name":"Toilet & Bath 2","dims":[["Width",2.8,"scaled"],["Depth",1.5,"sheet"]],"wet":true,"polygon":[[0,5090],[2800,5090],[2800,6590],[0,6590]],"ceiling_height":null},{"id":"bedroom","name":"Bedroom 01","dims":[["Width",4.96,"sheet","2.90 + 2.06"],["Depth",3.61,"sheet"],["Nook","2.06 x 1.40 m","sheet"]],"polygon":[[0,6590],[3970,6590],[3970,11600],[1910,11600],[1910,10200],[-990,10200],[-990,8480],[0,7180]],"ceiling_height":null},{"id":"tb1","name":"Toilet & Bath 1","dims":[["Width",2.9,"sheet"],["Depth",1.4,"sheet"]],"wet":true,"polygon":[[-990,10200],[1910,10200],[1910,11600],[-490,11600],[-990,11100]],"ceiling_height":null},{"id":"porch","name":"Second Floor Porch","dims":[["Width",1.25,"sheet"],["Depth",1.43,"sheet"]],"polygon":[[4250,-1430],[5500,-1430],[5500,0],[4250,0]],"ceiling_height":null,"outdoor":true}],"walls":[{"id":"N1a","from":[-990,11100],"to":[-840,11450],"t":150},{"id":"N1b","from":[-840,11450],"to":[-490,11600],"t":150},{"id":"N1","from":[-490,11600],"to":[1910,11600],"t":150},{"id":"N2","from":[1910,11600],"to":[3970,11600],"t":150},{"id":"NL","from":[3970,11600],"to":[9490,11600],"t":150},{"id":"EL","from":[9490,11600],"to":[9490,8980],"t":150},{"id":"E1","from":[9490,8980],"to":[10290,8350],"t":150},{"id":"E2","from":[10290,8350],"to":[10290,5850],"t":150},{"id":"E3","from":[10290,5850],"to":[9490,5150],"t":150},{"id":"E4","from":[9490,5150],"to":[9490,1430],"t":150},{"id":"E5","from":[9490,1430],"to":[8480,0],"t":150},{"id":"S1","from":[8480,0],"to":[3970,0],"t":150},{"id":"S2","from":[3970,0],"to":[0,0],"t":150},{"id":"W1","from":[0,0],"to":[0,7180],"t":150},{"id":"W2","from":[0,7180],"to":[-990,8480],"t":150},{"id":"W3","from":[-990,8480],"to":[-990,11100],"t":150},{"id":"P1","from":[3970,11600],"to":[3970,5720],"t":100},{"id":"P2","from":[3970,3950],"to":[3970,0],"t":100},{"id":"LD","from":[3970,8980],"to":[9490,8980],"t":100},{"id":"SL","from":[5970,8980],"to":[5970,11600],"t":100},{"id":"B1S","from":[-990,10200],"to":[2670,10200],"t":100},{"id":"B1E","from":[1910,11600],"to":[1910,10200],"t":100},{"id":"BRS","from":[0,6590],"to":[3970,6590],"t":100},{"id":"T2E","from":[2800,6590],"to":[2800,5090],"t":100},{"id":"T2P","from":[1170,6590],"to":[1170,5090],"t":100},{"id":"T2S","from":[0,5090],"to":[2800,5090],"t":100},{"id":"B1G","from":[0,11600],"to":[0,10200],"t":20,"kind":"glass"},{"id":"PE","from":[5500,0],"to":[5500,-2700],"t":150},{"id":"PR","from":[4250,-1430],"to":[5500,-1430],"t":50,"kind":"railing"},{"id":"SW","from":[0,0],"to":[0,-2700],"t":150},{"id":"SS","from":[1000,-2700],"to":[5500,-2700],"t":150}],"columns":[{"at":[0,11600],"size":300},{"at":[3970,11600],"size":300},{"at":[8480,11600],"size":300},{"at":[0,5540],"size":300},{"at":[3970,3950],"size":300},{"at":[8480,5720],"size":300},{"at":[3970,6960],"size":150},{"at":[0,0],"size":350,"round":true},{"at":[3970,0],"size":350,"round":true},{"at":[8480,0],"size":350,"round":true}],"openings":[{"id":"D-entry","wall":"S1","type":"door","offset":3230,"width":870,"height":2100,"hinge":"end","swing":"right","note":"from porch into living"},{"id":"D-bed","wall":"BRS","type":"door","offset":2970,"width":750,"height":2100,"hinge":"end","swing":"left"},{"id":"D-tb1","wall":"B1E","type":"door","offset":640,"width":700,"height":2100,"hinge":"end","swing":"right"},{"id":"D-tb2","wall":"T2E","type":"door","offset":200,"width":700,"height":2100,"hinge":"start","swing":"right","note":"exact door unclear on sheet"},{"id":"D-tb2wc","wall":"T2P","type":"door","offset":200,"width":600,"height":2100,"hinge":"start","swing":"right","note":"assumed"},{"id":"D-sto","wall":"LD","type":"door","offset":160,"width":800,"height":2100,"hinge":"start","swing":"left","note":"the sheet's laundry door, now food storage"},{"id":"D-lau","wall":"LD","type":"door","offset":4480,"width":800,"height":2100,"hinge":"end","swing":"left","note":"OPTION A new door"},{"id":"W-liv-s","wall":"S1","type":"window","offset":280,"width":1990,"height":1200,"sill":900,"room":"living"},{"id":"W-liv-e","wall":"E4","type":"window","offset":300,"width":3120,"height":1500,"sill":600,"room":"living"},{"id":"W-liv-se","wall":"E5","type":"window","offset":300,"width":1150,"height":1500,"sill":600,"room":"living"},{"id":"W-din-e","wall":"E2","type":"window","offset":200,"width":2100,"height":1500,"sill":600,"room":"dining"},{"id":"W-din-l","wall":"LD","type":"window","offset":2430,"width":1840,"height":600,"sill":1500,"room":"dining","note":"OPTION A high borrowed-light window into the laundry"},{"id":"W-sto","wall":"NL","type":"window","offset":700,"width":800,"height":500,"sill":1600,"room":"storage","note":"OPTION A high vent window"},{"id":"W-lau-n","wall":"NL","type":"window","offset":2580,"width":1500,"height":900,"sill":1100,"room":"laundry","note":"OPTION A"},{"id":"W-lau-e","wall":"EL","type":"window","offset":300,"width":1100,"height":800,"sill":1200,"room":"laundry","note":"OPTION A above the washers"},{"id":"W-kit-w","wall":"W1","type":"window","offset":1000,"width":1000,"height":1000,"sill":1050,"room":"kitchen","note":"over sink"},{"id":"W-kit-s","wall":"S2","type":"window","offset":1700,"width":770,"height":600,"sill":1500,"room":"kitchen","note":"behind range per sheet ticks; check"},{"id":"W-nook","wall":"N2","type":"window","offset":20,"width":900,"height":1000,"sill":1000,"room":"bedroom"},{"id":"W-tb1","wall":"N1","type":"window","offset":1500,"width":800,"height":500,"sill":1600,"room":"tb1"}],"furniture":[{"name":"Wardrobe","type":"wardrobe","rect":[-920,8040,390,1990],"h":2100,"face":"east","room":"bedroom"},{"name":"Headboard cabinet","type":"cabinet","rect":[-530,9550,3210,480],"h":900,"face":"south","room":"bedroom"},{"name":"Bed 1","type":"bed","rect":[-530,7980,1240,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Bed 2","type":"bed","rect":[1480,7980,1200,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Night table","type":"sidetable_round","rect":[830,8950,450,450],"h":550,"room":"bedroom"},{"name":"Wardrobe S","type":"wardrobe","rect":[130,6640,2670,450],"h":2100,"face":"north","room":"bedroom"},{"name":"Vanity desk","type":"desk","rect":[1990,11100,1880,420],"h":750,"face":"south","room":"bedroom"},{"name":"WC","type":"wc","rect":[150,11000,400,600],"h":400,"face":"south","rot":0,"room":"tb1"},{"name":"Lavatory","type":"lavatory","rect":[1050,11100,700,450],"h":850,"face":"south","room":"tb1"},{"name":"Shower 1","type":"shower","rect":[-940,10260,900,1300],"h":0,"room":"tb1"},{"name":"WC 2","type":"wc","rect":[380,5140,400,600],"h":400,"face":"north","room":"tb2"},{"name":"Shower 2","type":"shower","rect":[1250,5140,1500,1400],"h":0,"room":"tb2"},{"name":"Pantry","type":"counter","rect":[50,4460,2750,480],"h":900,"face":"south","upper":true,"room":"kitchen"},{"name":"Ref","type":"fridge","rect":[100,3470,650,760],"h":1800,"face":"east","room":"kitchen"},{"name":"Counter W","type":"counter","rect":[100,600,550,2870],"h":900,"face":"east","upper":true,"room":"kitchen"},{"name":"Sink","type":"sink","rect":[130,1000,500,960],"h":900,"face":"east","room":"kitchen"},{"name":"Counter S","type":"counter","rect":[100,50,3590,550],"h":900,"face":"north","room":"kitchen"},{"name":"Range","type":"range","rect":[1550,50,690,550],"h":900,"face":"north","room":"kitchen"},{"name":"Peninsula","type":"counter","rect":[3130,600,560,2180],"h":900,"face":"west","room":"kitchen"},{"name":"Island","type":"island","rect":[1520,1350,830,1500],"h":900,"room":"kitchen"},{"name":"Bench 1","type":"bench","rect":[4040,2840,300,840],"h":450,"face":"east","room":"living"},{"name":"Bench 2","type":"bench","rect":[4040,2000,300,840],"h":450,"face":"east","room":"living"},{"name":"Shoe rack","type":"cabinet","rect":[4040,60,300,1940],"h":1000,"face":"east","room":"living"},{"name":"TV console","type":"console","rect":[5950,80,2150,380],"h":500,"face":"north","room":"living"},{"name":"Sofa","type":"sofa","rect":[6290,3420,1780,800],"h":800,"face":"south","room":"living"},{"name":"Side table L","type":"sidetable","rect":[5640,3380,470,490],"h":550,"room":"living"},{"name":"Side table R","type":"sidetable","rect":[8110,3380,470,490],"h":550,"room":"living"},{"name":"Armchair 1","type":"armchair","rect":[5520,2160,790,830],"h":800,"face":"east","room":"living"},{"name":"Armchair 2","type":"armchair","rect":[5520,1300,790,790],"h":800,"face":"east","room":"living"},{"name":"Armchair 3","type":"armchair","rect":[8100,2200,790,800],"h":800,"face":"west","room":"living"},{"name":"Armchair 4","type":"armchair","rect":[8100,1300,790,800],"h":800,"face":"west","room":"living"},{"name":"Coffee table","type":"coffeetable","rect":[6920,1660,580,1040],"h":420,"room":"living"},{"name":"Dining table","type":"diningtable","rect":[6020,6620,2110,1060],"h":750,"seats":8,"room":"dining"},{"name":"Sorting hamper","type":"hamper","rect":[6900,9035,900,600],"h":900,"face":"north","bins":["Lights","Darks","Towels"],"room":"laundry"},{"name":"Washer","type":"washer","rect":[8765,9860,650,600],"h":850,"face":"west","room":"laundry"},{"name":"Supply shelf","type":"supplyshelf","rect":[9065,10480,350,420],"h":1050,"face":"west","room":"laundry"},{"name":"Dryer","type":"dryer","rect":[8765,10920,650,600],"h":850,"face":"west","room":"laundry"},{"name":"Folding counter","type":"counter","rect":[6025,10925,1675,600],"h":900,"face":"south","room":"laundry"},{"name":"Drying rack","type":"dryrack","rect":[6025,9100,450,800],"h":1900,"face":"east","room":"laundry"},{"name":"Shelving N","type":"shelving","rect":[4050,11075,1850,450],"h":2100,"face":"south","room":"storage"},{"name":"Shelving W","type":"shelving","rect":[4045,9900,450,1175],"h":2100,"face":"east","room":"storage"},{"name":"Chest freezer","type":"freezer","rect":[5250,9400,650,700],"h":850,"face":"west","room":"storage"}],"dimensions":[{"sheet":1.17,"from":[0,11600],"to":[1170,11600],"at":12550},{"sheet":1.5,"from":[1170,11600],"to":[2670,11600],"at":12550},{"sheet":1.3,"from":[2670,11600],"to":[3970,11600],"at":12550},{"sheet":2.9,"from":[-990,11100],"to":[1910,11600],"at":13150,"axis":"x"},{"sheet":2.06,"from":[1910,11600],"to":[3970,11600],"at":13150},{"sheet":5.52,"from":[3970,11600],"to":[9490,11600],"at":13150},{"sheet":0.8,"from":[9490,11600],"to":[10290,8350],"at":13150,"axis":"x"},{"sheet":10.48,"from":[-990,11100],"to":[9490,11600],"at":13750,"axis":"x"},{"sheet":1.4,"from":[-490,11600],"to":[-990,10200],"at":-1950,"axis":"y"},{"sheet":3.61,"from":[-990,10200],"to":[0,6590],"at":-1950,"axis":"y"},{"sheet":1.5,"from":[0,6590],"to":[0,5090],"at":-1950},{"sheet":5.1,"from":[0,5090],"to":[0,0],"at":-1950,"note":"The sheet's west chain 1.40 + 3.61 + 1.50 + 5.10 adds up to 11.61, but the overall is printed 11.60. One link is 10 mm out; ask the architect which."},{"sheet":1.43,"from":[0,0],"to":[0,-1430],"at":-1950},{"sheet":1.27,"from":[0,-1430],"to":[0,-2700],"at":-1950},{"sheet":11.6,"from":[-490,11600],"to":[0,0],"at":-2550,"axis":"y"},{"sheet":2.7,"from":[0,0],"to":[0,-2700],"at":-2550},{"sheet":2.62,"from":[9490,11600],"to":[9490,8980],"at":11150},{"sheet":3.26,"from":[9490,8980],"to":[10141,5720],"at":11150,"axis":"y"},{"sheet":1.59,"from":[10141,5720],"to":[9490,4130],"at":11150,"axis":"y"},{"sheet":4.13,"from":[9490,4130],"to":[8480,0],"at":11150,"axis":"y"},{"sheet":11.6,"from":[9490,11600],"to":[8480,0],"at":11750,"axis":"y"},{"sheet":1.0,"from":[0,-2700],"to":[1000,-2700],"at":-3800},{"sheet":3.25,"from":[1000,-2700],"to":[4250,-2700],"at":-3800},{"sheet":1.25,"from":[4250,-2700],"to":[5500,-2700],"at":-3800},{"sheet":2.98,"from":[5500,-2700],"to":[8480,0],"at":-3800,"axis":"x"},{"sheet":5.5,"from":[0,-2700],"to":[5500,-2700],"at":-4400}],"sections":[{"id":"living-seating","room":"living","name":"Seating area","rect":[5520,1300,3370,2920],"h":900,"face":"south","src":"scaled"},{"id":"living-entry","room":"living","name":"Entry and shoe bench","rect":[4040,40,1210,3640],"h":1000,"face":"east","src":"scaled"},{"id":"living-console","room":"living","name":"TV console","rect":[5950,80,2150,380],"h":500,"face":"north","src":"scaled","close":true},{"id":"dining-table","room":"dining","name":"Dining table for 8","rect":[5520,6120,3110,2060],"h":750,"face":"south","src":"scaled"},{"id":"dining-bay","room":"dining","name":"Bay window","rect":[9490,5850,800,2500],"h":2100,"face":"west","src":"sheet","note":"0.80 m projection is on the sheet; window sizes are assumed."},{"id":"kitchen-cooking","room":"kitchen","name":"Range and hood","rect":[1450,50,900,600],"h":1950,"face":"north","src":"scaled","close":true,"note":"The sheet seems to show a window behind the range; check with the architect."},{"id":"kitchen-sink","room":"kitchen","name":"Sink and prep counter","rect":[100,600,550,2870],"h":900,"face":"east","src":"scaled"},{"id":"kitchen-island","room":"kitchen","name":"Island","rect":[1520,1350,830,1500],"h":900,"face":"east","src":"scaled","close":true},{"id":"kitchen-pantry","room":"kitchen","name":"Pantry wall","rect":[50,4460,2750,480],"h":2150,"face":"south","src":"scaled"},{"id":"kitchen-fridge","room":"kitchen","name":"Refrigerator","rect":[100,3470,650,760],"h":1800,"face":"east","src":"scaled","close":true},{"id":"bed-beds","room":"bedroom","name":"Twin beds","rect":[-530,7980,3210,2050],"h":900,"face":"south","src":"scaled","note":"Beds scale to about 1.20 x 1.57 m on the sheet; a standard single is 1.90 m long."},{"id":"bed-wardrobe-w","room":"bedroom","name":"Wardrobe (west)","rect":[-920,8040,390,1990],"h":2100,"face":"east","src":"scaled"},{"id":"bed-wardrobe-s","room":"bedroom","name":"Wardrobe (south)","rect":[130,6640,2670,450],"h":2100,"face":"north","src":"scaled"},{"id":"bed-nook","room":"bedroom","name":"Vanity nook","rect":[1910,10200,2060,1400],"h":1600,"face":"south","src":"sheet","note":"2.06 x 1.40 m from the sheet."},{"id":"tb1-shower","room":"tb1","name":"Shower","rect":[-940,10260,900,1300],"h":2200,"face":"east","src":"scaled"},{"id":"tb1-wc","room":"tb1","name":"WC and lavatory","rect":[50,10950,1800,600],"h":1500,"face":"south","src":"scaled"},{"id":"tb2-wc","room":"tb2","name":"WC compartment","rect":[0,5090,1170,1500],"h":1200,"face":"north","src":"sheet","note":"1.17 m width is on the sheet."},{"id":"tb2-shower","room":"tb2","name":"Shower compartment","rect":[1170,5090,1630,1500],"h":2200,"face":"north","src":"scaled"},{"id":"storage-shelving","room":"storage","name":"Shelving","rect":[4045,9900,1855,1625],"h":2100,"face":"south","src":"proposed","note":"Two runs, 0.45 m deep, five levels."},{"id":"storage-freezer","room":"storage","name":"Chest freezer","rect":[5250,9400,650,700],"h":850,"face":"west","src":"proposed","close":true},{"id":"laundry-sort","room":"laundry","name":"Sorting bins","rect":[6900,9035,900,600],"h":900,"face":"north","src":"proposed","close":true,"note":"Ventilated hamper cabinet with three tilt-out bins (lights, darks, towels). Bins pull out 0.45 m into the room, clear of the door swing; the nearest bin is about 0.7 m from the door opening."},{"id":"laundry-wash","room":"laundry","name":"Washer and dryer","rect":[8765,9860,650,1660],"h":850,"face":"west","src":"proposed","note":"Front-loaders facing a 0.95 m aisle. Dryer door hinged on the south side so it clears the column. Water, drain and dryer vent positions are assumed."},{"id":"laundry-shelf","room":"laundry","name":"Supply shelf","rect":[9065,10480,350,420],"h":1050,"face":"west","src":"proposed","close":true,"note":"Three levels with 0.42 m clear height for tall bottles, and a 60 mm raised front edge. Kept below the east window sill (1.20 m, assumed)."},{"id":"laundry-fold","room":"laundry","name":"Folding counter","rect":[6025,10925,1675,600],"h":900,"face":"south","src":"proposed","note":"1.68 m long and 0.60 m deep, under the north window, on the clean side away from the bins."},{"id":"laundry-rack","room":"laundry","name":"Drying rack","rect":[6025,9100,450,800],"h":1900,"face":"east","src":"proposed","close":true,"note":"Wall-mounted pull-out rack, shown extended (0.45 m). It folds flat against the wall when not in use."},{"id":"porch-stair","room":"porch","name":"Exterior stair","rect":[1000,-2700,4500,2700],"h":1700,"face":"south","src":"sheet","note":"Drawn schematically: one flight down, one up to the third floor."}],"zones":[{"room":"laundry","kind":"bin","name":"Bin pull-out","rect":[6900,9635,900,450]},{"room":"laundry","kind":"appliance","name":"Washer door and loading","rect":[8215,9890,550,540]},{"room":"laundry","kind":"appliance","name":"Dryer door and loading","rect":[8215,10950,550,480]},{"room":"laundry","kind":"reach","name":"Shelf reach","rect":[8715,10480,350,420]},{"room":"laundry","kind":"route","name":"Route to the door","rect":[7800,9035,965,1050]},{"room":"laundry","kind":"route","name":"Clean-side aisle","rect":[6480,10085,2285,840]}],"services":[{"room":"laundry","name":"Water supply and drain (assumed)","at":[9415,10160],"h":900},{"room":"laundry","name":"Floor drain (assumed)","at":[8450,10180],"h":0},{"room":"laundry","name":"Dryer vent (assumed)","at":[9415,11200],"h":400}],"decor":{"rugs":[[7210,2250,3100,2400],[7075,7150,3200,2400],[1075,7540,2600,800]],"plants":[[8720,720,1],[9950,8000,1.1],[3750,10780,0.8],[5250,-1200,0.75],[4500,4450,0.95]],"floor_lamps":[[5200,3250]],"art":[[4025,2900,"east",1.3,0.9,1.55,1],[4025,7300,"east",1.6,1.05,1.55,2],[1075,10145,"south",1.5,0.7,1.45,3],[3915,6100,"west",0.55,0.75,1.5,4]]},"tour":{"path":[{"at":[4870,-900],"stop":"porch"},{"at":[4820,500]},{"at":[5000,1300],"stop":"living","look":[7400,2600]},{"at":[4750,2300]},{"at":[4750,3800]},{"at":[5300,4500]},{"at":[5200,5600]},{"at":[5000,6600],"stop":"dining","look":[9200,7200]},{"at":[4550,8650]},{"at":[4600,9350]},{"at":[4800,9650],"stop":"storage","look":[4700,11300]},{"at":[4600,9350]},{"at":[4550,8650]},{"at":[5300,8680]},{"at":[8200,8680]},{"at":[8850,8700]},{"at":[8850,9250]},{"at":[8450,9700],"stop":"laundry","look":[6800,10800]},{"at":[8850,9250]},{"at":[8850,8700]},{"at":[9600,7000]},{"at":[9100,5300]},{"at":[4700,5300]},{"at":[3350,4950]},{"at":[2900,3500],"stop":"kitchen","look":[1500,1200]},{"at":[3350,4950]},{"at":[3350,6150],"stop":"hall","look":[1800,5800]},{"at":[3350,7300]},{"at":[3300,9000],"stop":"bedroom","look":[0,8800]},{"at":[3300,10450]},{"at":[2400,10630]},{"at":[1450,10610],"stop":"tb1","look":[-500,11000]}],"points":{"porch":"Arrival from the exterior stair, straight into the living room.","living":"Glazing on two sides plus a splayed corner window.","dining":"Bay window projects 0.80 m past the line of the house.","storage":"Enclosed food storage by the dining door, with shelving on two walls and a chest freezer.","laundry":"Sort, wash, dry, fold: bins by the door, washer and dryer facing a clear aisle with the supply shelf between them, and the folding counter and drying rack on the clean side.","kitchen":"L-shaped counter with a separate island and pantry wall.","hall":"Shared Toilet & Bath 2 off a private hall.","bedroom":"Twin beds, built-in wardrobes on two walls and a vanity nook.","tb1":"Ensuite with a walk-in shower behind glass."},"welcome":{"project":"Second Floor Renovation","subtitle":"Option A, with the laundry balcony enclosed as a food storage room and a laundry room","address":"","price":"","contact_name":"","contact_phone":""}}};
 const MM = 0.001;
 const H = (PLAN.meta.ceiling_height_assumed || 2700) * MM;     // ASSUMED ceiling height
 const EYE = 1.6, R = 0.22;
@@ -452,6 +516,8 @@ function sideRole(px, py) {
   if (r.wet) return 'wetWall';
   return 'wall';
 }
+const wallParts = {};
+function tagWall(id, o) { (wallParts[id] ||= []).push(o); o.userData.wallId = id; o.userData.keep = true; return o; }
 for (const w of PLAN.walls) {
   const ax = w.from[0] * MM, ay = w.from[1] * MM, bx = w.to[0] * MM, by = w.to[1] * MM;
   const L = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / L, uy = (by - ay) / L, nx = -uy, ny = ux;
@@ -463,18 +529,18 @@ for (const w of PLAN.walls) {
   const piece = (s0, s1, y0, y1) => {
     if (s1 - s0 < 0.005 || y1 - y0 < 0.005) return;
     const m = new THREE.Mesh(box(s1 - s0, y1 - y0, t), mats);
-    m.position.copy(at((s0 + s1) / 2, (y0 + y1) / 2)); m.rotation.y = theta; m.castShadow = m.receiveShadow = true; house.add(m);
+    m.position.copy(at((s0 + s1) / 2, (y0 + y1) / 2)); m.rotation.y = theta; m.castShadow = m.receiveShadow = true; house.add(tagWall(w.id, m));
   };
   if (kind === 'railing') {
-    const rail = mesh(box(L, 0.05, 0.05), 'frame'); rail.position.copy(at(L / 2, 1.0)); rail.rotation.y = theta; house.add(rail);
+    const rail = mesh(box(L, 0.05, 0.05), 'frame'); rail.position.copy(at(L / 2, 1.0)); rail.rotation.y = theta; house.add(tagWall(w.id, rail));
     const n = Math.floor(L / 0.11), g = new THREE.BoxGeometry(0.018, 1.0, 0.018), im = new THREE.InstancedMesh(g, mat('frame'), n); const m4 = new THREE.Matrix4();
     for (let i = 0; i < n; i++) { const p = at((i + 0.5) * L / n, 0.5); m4.makeTranslation(p.x, p.y, p.z); im.setMatrixAt(i, m4); }
-    im.castShadow = true; house.add(im);
+    im.castShadow = true; house.add(tagWall(w.id, im));
     segs.push({ ax, ay, bx, by, t: 0.06 }); continue;
   }
   if (kind === 'glass') {
-    const gl = mesh(box(L, 2.1, 0.012), 'glass'); gl.castShadow = false; gl.position.copy(at(L / 2, 1.05)); gl.rotation.y = theta; house.add(gl);
-    const tr = mesh(box(L, 0.025, 0.03), 'steel'); tr.position.copy(at(L / 2, 2.1)); tr.rotation.y = theta; house.add(tr);
+    const gl = mesh(box(L, 2.1, 0.012), 'glass'); gl.castShadow = false; gl.position.copy(at(L / 2, 1.05)); gl.rotation.y = theta; house.add(tagWall(w.id, gl));
+    const tr = mesh(box(L, 0.025, 0.03), 'steel'); tr.position.copy(at(L / 2, 2.1)); tr.rotation.y = theta; house.add(tagWall(w.id, tr));
     segs.push({ ax, ay, bx, by, t: 0.04 }); continue;
   }
   const ops = (PLAN.openings || []).filter(o => o.wall === w.id).map(o => ({ ...o, s0: o.offset * MM, s1: (o.offset + o.width) * MM })).sort((a, b) => a.s0 - b.s0);
@@ -506,13 +572,13 @@ function buildWindow(o, at, theta, t, sill, head) {
   for (let i = 1; i < panes; i++) Bc(g, 0.035, head - sill, d, 'frame', -w / 2 + i * w / panes, sill, 0);
   const gl = Bc(g, w - 2 * f, head - sill - 2 * f, 0.01, 'glass', 0, sill + f, 0); gl.castShadow = false;
   Bc(g, w + 0.04, 0.03, t + 0.06, 'counter', 0, sill - 0.03, 0);       // sill board
-  house.add(g);
+  house.add(tagWall(o.wall, g));
 }
 function buildDoor(o, at, ux, uy, theta, t) {
   const w = o.width * MM, dh = (o.height || 2100) * MM, g = new THREE.Group();
   const p = at(o.s0 + w / 2, 0); g.position.set(p.x, 0, p.z); g.rotation.y = theta;
   Bc(g, 0.04, dh, t + 0.02, 'door', -w / 2 + 0.02, 0, 0); Bc(g, 0.04, dh, t + 0.02, 'door', w / 2 - 0.02, 0, 0); Bc(g, w, 0.04, t + 0.02, 'door', 0, dh - 0.04, 0);
-  house.add(g);
+  house.add(tagWall(o.wall, g));
   // leaf, opened ~80 degrees toward the swing side
   const hingeAtStart = (o.hinge || 'start') === 'start';
   const hs = hingeAtStart ? o.s0 : o.s1;
@@ -522,8 +588,8 @@ function buildDoor(o, at, ux, uy, theta, t) {
   const a = 80 * Math.PI / 180, dx = cdx * Math.cos(a) + snx * Math.sin(a), dy = cdy * Math.cos(a) + sny * Math.sin(a);
   const lw = w - 0.06, leaf = mesh(box(lw, dh - 0.05, 0.04), 'door');
   leaf.position.set((hx + dx * (lw / 2 + 0.03)), (dh - 0.05) / 2, -(hy + dy * (lw / 2 + 0.03))); leaf.rotation.y = Math.atan2(dy, dx);
-  house.add(leaf);
-  const knob = mesh(new THREE.SphereGeometry(0.03, 12, 8), 'accent'); knob.position.set(hx + dx * (lw - 0.05), 1.0, -(hy + dy * (lw - 0.05))); house.add(knob);
+  const knob = mesh(new THREE.SphereGeometry(0.03, 12, 8), 'accent'); knob.position.set(hx + dx * (lw - 0.05), 1.0, -(hy + dy * (lw - 0.05)));
+  const lg = new THREE.Group(); lg.add(leaf, knob); house.add(tagWall(o.wall, lg));
 }
 function PLAN_WALL_AX(o) { return wallById[o.wall].from[0] * MM; }
 function PLAN_WALL_AY(o) { return wallById[o.wall].from[1] * MM; }
@@ -702,6 +768,43 @@ const BUILD = {
     Bc(g, W - 0.02, Hh, D - 0.02, 'ceramic', 0, 0, 0); Bc(g, W - 0.03, 0.006, 0.004, 'black', 0, Hh - 0.07, D / 2 - 0.008);
     Bc(g, 0.3, 0.025, 0.03, 'steel', 0, Hh - 0.13, D / 2);
   },
+  hamper(g, W, D, Hh, f) {
+    const names = f.bins || ['Lights', 'Darks', 'Towels'], n = names.length, bw = W / n;
+    Bc(g, W - 0.02, 0.08, D - 0.05, 'black', 0, 0, -0.03);
+    Bc(g, W, Hh - 0.11, D - 0.03, 'cabinet', 0, 0.08, -0.015);
+    Bc(g, W + 0.02, 0.03, D, 'wood', 0, Hh - 0.03, 0);
+    names.forEach((nm, i) => {
+      const bin = new THREE.Group(); bin.position.set(-W / 2 + bw * (i + 0.5), 0.1, D / 2 - 0.005); g.add(bin);
+      if (i === 1) bin.rotation.x = 0.34;                                   // one bin shown tilted out
+      Bc(bin, bw - 0.02, Hh - 0.17, 0.02, 'cabinet', 0, 0, 0);
+      for (let k = 0; k < 7; k++) Bc(bin, bw * 0.62, 0.01, 0.004, 'black', 0, Hh - 0.47 + k * 0.032, 0.012);   // vent slots
+      Bc(bin, 0.13, 0.022, 0.025, 'accent', 0, Hh - 0.25, 0.022);
+      const lab = labelPlane(nm); lab.position.set(0, 0.2, 0.0125); bin.add(lab);
+      if (i === 1) { Bc(bin, bw - 0.07, Hh - 0.32, 0.02, 'cabinet', 0, 0, -0.33); Bc(bin, bw - 0.09, 0.22, 0.28, 'throw', 0, Hh - 0.5, -0.17); }
+    });
+  },
+  dryer(g, W, D, Hh) { BUILD.washer(g, W, D, Hh); Bc(g, 0.16, 0.05, 0.01, 'steel', 0.14, Hh - 0.11, D / 2 - 0.05); },
+  supplyshelf(g, W, D, Hh) {
+    for (const sx of [-1, 1]) Bc(g, 0.02, Hh, D, 'wood', sx * (W / 2 - 0.01), 0, 0);
+    Bc(g, W, Hh, 0.012, 'wood', 0, 0, -D / 2 + 0.006);
+    const r = rng(17);
+    for (const y of [0.06, 0.52, Hh - 0.025]) {
+      Bc(g, W - 0.04, 0.025, D - 0.02, 'wood', 0, y, 0);
+      Bc(g, W - 0.04, 0.06, 0.015, 'wood', 0, y + 0.025, D / 2 - 0.0075);      // raised front edge
+      for (let x = -W / 2 + 0.07; x < W / 2 - 0.06; x += 0.1 + r() * 0.025) {
+        const hh = y > 1 ? 0.16 : r() > 0.4 ? 0.31 : 0.22, k = r();
+        if (k < 0.5) Bc(g, 0.08, hh, 0.11, ['food', 'food2', 'throw', 'pot'][Math.floor(r() * 4)], x, y + 0.025, -0.03);
+        else CY(g, 0.034, 0.04, hh - 0.03, k < 0.75 ? 'ceramic' : 'food2', x, y + 0.025, -0.03, 12);
+      }
+    }
+  },
+  dryrack(g, W, D, Hh) {
+    Bc(g, W, 0.45, 0.03, 'accent', 0, Hh - 0.6, -D / 2 + 0.015);
+    for (const sx of [-1, 1]) for (let k = 0; k < 2; k++) Bc(g, 0.02, 0.02, D - 0.03, 'steel', sx * (W / 2 - 0.02), Hh - 0.36 - k * 0.12, 0.015);
+    for (let i = 0; i < 6; i++) Bc(g, W - 0.02, 0.016, 0.016, 'steel', 0, Hh - 0.34 - (i % 2) * 0.03, -D / 2 + 0.09 + i * (D - 0.11) / 5);
+    Bc(g, W * 0.5, 0.42, 0.01, 'throw', -W * 0.18, Hh - 0.76, -D / 2 + 0.09 + 2 * (D - 0.11) / 5);
+    Bc(g, W * 0.3, 0.3, 0.01, 'fabric2', W * 0.24, Hh - 0.66, -D / 2 + 0.09 + 4 * (D - 0.11) / 5);
+  },
   shower(g, W, D) {
     Bc(g, W - 0.02, 0.025, D - 0.02, 'wetFloor', 0, 0, 0);
     Bc(g, 0.1, 0.012, 0.1, 'steel', 0, 0.026, 0);
@@ -709,6 +812,17 @@ const BUILD = {
     Bc(g, 0.3, 0.012, 0.25, 'steel', 0, 2.205, -D / 2 + 0.12);
   },
 };
+const LABEL_MATS = {};
+function labelPlane(text) {
+  if (!LABEL_MATS[text]) {
+    const c = document.createElement('canvas'); c.width = 256; c.height = 80;
+    const g2 = c.getContext('2d'); g2.fillStyle = '#f4f1ea'; g2.fillRect(0, 0, 256, 80);
+    g2.fillStyle = '#2a2f33'; g2.font = '600 44px Inter, Arial, sans-serif'; g2.textAlign = 'center'; g2.textBaseline = 'middle'; g2.fillText(text, 128, 42);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    LABEL_MATS[text] = new THREE.MeshStandardMaterial({ map: t, roughness: 0.8 });
+  }
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 0.056), LABEL_MATS[text]); m.castShadow = false; m.receiveShadow = true; return m;
+}
 function tableLamp(g, x, y, z) {
   CY(g, 0.05, 0.07, 0.03, 'accent', x, y, z, 16); CY(g, 0.012, 0.012, 0.3, 'accent', x, y, z, 8);
   const sh = mesh(new THREE.CylinderGeometry(0.11, 0.15, 0.2, 24, 1, true), 'shade'); sh.position.set(x, y + 0.36, z); sh.castShadow = false; g.add(sh);
@@ -801,25 +915,41 @@ scene.add(sky);
 const skyFog = new THREE.Fog(0xcfe0ea, 60, 260); scene.fog = skyFog;
 
 /* ---------------------------------------------------------------- merge static meshes per material (fewer draw calls) */
+function bucketMesh(buckets, o, matrix) {
+  const key = o.material.uuid + (o.castShadow ? 's' : 'n');
+  if (!buckets.has(key)) buckets.set(key, { m: o.material, cast: o.castShadow, geos: [] });
+  const g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
+  for (const k of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(k)) g.deleteAttribute(k);
+  g.applyMatrix4(matrix); buckets.get(key).geos.push(g);
+}
+function addBuckets(group, buckets) {
+  for (const { m, cast, geos } of buckets.values()) { const mm = new THREE.Mesh(mergeGeometries(geos), m); mm.castShadow = cast; mm.receiveShadow = true; group.add(mm); }
+}
+function mergeLocal(g) {   // merge a kept group's own meshes, in the group's space, so it can still be hidden as one piece
+  if (!g.isGroup) return;
+  const buckets = new Map(), rest = [];
+  for (const o of [...g.children]) {
+    if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material)) { rest.push(o); continue; }
+    o.updateMatrix(); bucketMesh(buckets, o, o.matrix);
+  }
+  g.clear(); for (const o of rest) g.add(o); addBuckets(g, buckets);
+}
 function mergeGroup(group) {
   group.updateMatrixWorld(true);
   const buckets = new Map(), keep = [];
-  group.traverse(o => {
-    if (!o.isMesh || o.isInstancedMesh) return;
-    if (Array.isArray(o.material)) { keep.push(o); return; }
-    if (artPieces.some(a => a.material === o.material)) { keep.push(o); return; }
-    const key = o.material.uuid + (o.castShadow ? 's' : 'n');
-    if (!buckets.has(key)) buckets.set(key, { m: o.material, cast: o.castShadow, geos: [] });
-    let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
-    for (const k of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(k)) g.deleteAttribute(k);
-    g.applyMatrix4(o.matrixWorld); buckets.get(key).geos.push(g);
-  });
-  const extra = [];
-  group.traverse(o => { if (o.isInstancedMesh || keep.includes(o)) extra.push(o); });
-  for (const o of extra) { o.updateMatrixWorld(true); const wm = o.matrixWorld.clone(); o.removeFromParent(); o.matrix.copy(wm); o.matrix.decompose(o.position, o.quaternion, o.scale); }
+  const walk = (node) => {
+    for (const c of node.children) {
+      if (c.userData.keep) { keep.push(c); mergeLocal(c); continue; }
+      if (c.isInstancedMesh || (c.isMesh && (Array.isArray(c.material) || artPieces.some(a => a.material === c.material)))) { keep.push(c); continue; }
+      if (c.isMesh) bucketMesh(buckets, c, c.matrixWorld);
+      walk(c);
+    }
+  };
+  walk(group);
+  for (const o of keep) { const wm = o.matrixWorld.clone(); o.removeFromParent(); o.matrix.copy(wm); o.matrix.decompose(o.position, o.quaternion, o.scale); }
   group.clear(); group.position.set(0, 0, 0); group.rotation.set(0, 0, 0); group.scale.set(1, 1, 1);
-  for (const { m, cast, geos } of buckets.values()) { const mm = new THREE.Mesh(mergeGeometries(geos), m); mm.castShadow = cast; mm.receiveShadow = true; group.add(mm); }
-  for (const o of extra) group.add(o);
+  addBuckets(group, buckets);
+  for (const o of keep) group.add(o);
 }
 mergeGroup(house); mergeGroup(furniture);
 
@@ -841,7 +971,7 @@ for (const r of rooms) {
 /* ---------------------------------------------------------------- time of day */
 const C = (h) => new THREE.Color(h);
 const SKY = { day: [C('#6aa3d8'), C('#d3e5ef'), C('#7e8f6a')], gold: [C('#4f6290'), C('#f3a961'), C('#6c5a44')], night: [C('#060a14'), C('#18213a'), C('#0b0f0c')] };
-const state = { hour: 10, targetHour: 10, style: 'scandi', mode: 'init', px: 4.87, py: -0.9, yaw: 0, pitch: -0.02, lampF: 0, preset: 'iso', rotate: true, rooms: true, dims: true };
+const state = { hour: 10, targetHour: 10, style: 'scandi', mode: 'init', px: 4.87, py: -0.9, yaw: 0, pitch: -0.02, lampF: 0, preset: 'iso', rotate: false, rooms: true, dims: true, sel: { room: null, sec: null }, topSel: false };
 function hourFromSlider(v) { return 6 + 15 * v / 1000; }
 function fmtHour(h) { const hh = Math.floor(h), mm = Math.floor((h - hh) * 60 / 5) * 5; const ap = hh >= 12 ? 'PM' : 'AM'; return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${ap}`; }
 const ss = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -966,10 +1096,24 @@ const DIM_Y = -0.19, dimLabels = [];
   const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   dimGroup.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x24323b })));
 }
+const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const roomLabels = rooms.map(r => {
   const [cx, cy] = r.label_at || centroid(r.poly), a = areaM2(r.poly);
-  return { el: makeLabel('rl', `${r.name}<small>${a.toFixed(1)} m² · ${Math.round(a * 10.7639)} sq ft</small>`), p: P3(cx, cy, H + 0.4) };
+  const el = makeLabel('rl', `${esc(r.name)}<small>${a.toFixed(1)} m² · ${Math.round(a * 10.7639)} sq ft</small>`);
+  el.setAttribute('role', 'button'); el.title = `Explore ${r.name}`;
+  el.addEventListener('click', (e) => { e.stopPropagation(); select(r.id, null); });
+  return { id: r.id, el, p: P3(cx, cy, H + 0.4) };
 });
+const SECTIONS = PLAN.sections || [];
+const secById = Object.fromEntries(SECTIONS.map(x => [x.id, x]));
+const secsOf = (rid) => SECTIONS.filter(x => x.room === rid);
+const secLabels = SECTIONS.map(x => {
+  const [sx, sy, sw, sd] = x.rect, el = makeLabel('sl', esc(x.name));
+  el.setAttribute('role', 'button'); el.title = `Inspect ${x.name}`;
+  el.addEventListener('click', (e) => { e.stopPropagation(); select(x.room, x.id); });
+  return { s: x, el, p: P3(sx + sw / 2, sy + sd / 2, (x.h || 800) * MM + 0.22) };
+});
+const zoneLabels = [];
 const pa = new THREE.Vector3(), pb = new THREE.Vector3();
 const ray = new THREE.Raycaster(), rayDir = new THREE.Vector3(), mid = new THREE.Vector3();
 let occlTick = 0;
@@ -989,12 +1133,17 @@ function placeLabels() {
   labelsEl.hidden = !ov; if (!ov) return;
   const w = innerWidth, h = innerHeight;
   if (occlTick-- <= 0 || camera.position.distanceToSquared(lastOccl) > 0.04) { updateOcclusion(); lastOccl.copy(camera.position); occlTick = 8; }
-  for (const L of roomLabels) {
-    if (!state.rooms || !toScreen(L.p, pa)) { L.el.style.display = 'none'; continue; }
+  const put = (L, show) => {
+    if (!show || !toScreen(L.p, pa)) { L.el.style.display = 'none'; return; }
     L.el.style.display = ''; L.el.style.transform = `translate(${(pa.x + 1) / 2 * w}px, ${(1 - pa.y) / 2 * h}px) translate(-50%, -50%)`;
-  }
+  };
+  const sel = state.sel;
+  for (const L of roomLabels) { L.el.classList.toggle('faded', !!sel.room); put(L, state.rooms && L.id !== sel.room); }
+  for (const L of secLabels) { L.el.classList.toggle('on', L.s.id === sel.sec); put(L, L.s.room === sel.room); }
+  for (const L of zoneLabels) put(L, !!sel.room && state.topSel);
+  if (sel.room && (ghostTick-- <= 0 || camera.position.distanceToSquared(lastGhostCam) > 0.02)) { updateGhosts(); lastGhostCam.copy(camera.position); ghostTick = 6; }
   for (const L of dimLabels) {
-    if (!state.dims || L.occluded || !toScreen(L.a, pa) || !toScreen(L.b, pb)) { L.el.style.display = 'none'; continue; }
+    if (!state.dims || sel.room || L.occluded || !toScreen(L.a, pa) || !toScreen(L.b, pb)) { L.el.style.display = 'none'; continue; }
     const ax = (pa.x + 1) / 2 * w, ay = (1 - pa.y) / 2 * h, bx = (pb.x + 1) / 2 * w, by = (1 - pb.y) / 2 * h;
     let ang = Math.atan2(by - ay, bx - ax) * 180 / Math.PI; if (ang > 90) ang -= 180; if (ang <= -90) ang += 180;
     L.el.style.display = Math.hypot(bx - ax, by - ay) < 18 ? 'none' : '';
@@ -1005,7 +1154,7 @@ function placeLabels() {
 const orbit = new OrbitControls(camera, cvs);
 orbit.enabled = false; orbit.enableDamping = true; orbit.maxPolarAngle = 1.45; orbit.minDistance = 5; orbit.maxDistance = 70; orbit.autoRotateSpeed = 0.5;
 orbit.target.set(CENTER.x, 0, CENTER.z);
-const PRESETS = { iso: [11, 15, 15.5], top: [0, 36, 0.02], front: [0, 5, 28], side: [28, 5, 0] };
+const PRESETS = { iso: [0, 17.5, 16], top: [0, 36, 0.02], front: [0, 5, 28], side: [28, 5, 0] };   // iso looks north, like the sheet
 let fly = null;
 function fitScale() { const a = innerWidth / innerHeight; return a < 1 ? Math.min(2.2, 1.05 / a) : a < 1.3 ? 1.12 : 1; }
 function presetPos(name) { const o = PRESETS[name], k = fitScale(); return new THREE.Vector3(CENTER.x + o[0] * k, o[1] * k, CENTER.z + o[2] * k); }
@@ -1024,7 +1173,7 @@ function flyStep(dt) {
 }
 function applyViewOffset() {
   const ov = state.mode === 'overview' || state.mode === 'rise';
-  const wide = innerWidth > 760, panel = $('panel');
+  const wide = innerWidth > 760, panel = $('detail').hidden ? $('panel') : $('detail');
   const dx = ov && wide ? Math.min(230, (panel.offsetWidth + 24) / 2) : 0, dy = ov ? 34 : 0;
   if (dx || dy) camera.setViewOffset(innerWidth, innerHeight, -dx, dy, innerWidth, innerHeight); else camera.clearViewOffset();
 }
@@ -1043,12 +1192,224 @@ function setMode(m) {
   if (m === 'overview') {
     if (document.pointerLockElement) document.exitPointerLock();
     if (prev === 'rise') { orbit.target.set(CENTER.x, 0, CENTER.z); orbit.update(); state.preset = 'iso'; markPreset(); }
-    else goPreset(state.preset, prev === 'init');
+    else if (state.sel.room) frameSelection(); else goPreset(state.preset, prev === 'init');
   }
+  hl.visible = m === 'overview';
+  updateGhosts();
   renderer.shadowMap.needsUpdate = true;
 }
 cvs.addEventListener('pointerdown', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } });
 cvs.addEventListener('wheel', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } }, { passive: true });
+
+/* ---------------------------------------------------------------- explore: select rooms and sections */
+const hl = new THREE.Group(); scene.add(hl);
+const hlFill = new THREE.MeshBasicMaterial({ color: 0xa2702f, transparent: true, opacity: 0.16, depthWrite: false });
+const hlEdge = new THREE.LineBasicMaterial({ color: 0x8a5a1c });
+const ZCOL = { door: '#a8431f', bin: '#c27c0e', appliance: '#1f5fa8', reach: '#6b3fa0', route: '#2e7d4f', service: '#1f5fa8' };
+const zoneMats = {};
+const zoneMat = (k) => zoneMats[k] || (zoneMats[k] = new THREE.MeshBasicMaterial({ color: ZCOL[k] || '#555', transparent: true, opacity: k === 'route' ? 0.12 : 0.24, depthWrite: false }));
+const rectPolyMM = ([x, y, w, d]) => [[x, y], [x + w, y], [x + w, y + d], [x, y + d]];
+function flatPoly(poly, y, m) { const sh = new THREE.Shape(poly.map(q => new THREE.Vector2(q[0] * MM, q[1] * MM))); const g = new THREE.ShapeGeometry(sh); g.rotateX(-Math.PI / 2); g.translate(0, y, 0); const o = new THREE.Mesh(g, m); o.renderOrder = 2; return o; }
+function outline(poly, y) { const pts = poly.map(q => P3(q[0], q[1], y)); pts.push(pts[0].clone()); return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), hlEdge); }
+function doorFans(poly) {
+  const out = [];
+  for (const o of PLAN.openings || []) {
+    if (o.type !== 'door') continue;
+    const w = wallById[o.wall], [ax, ay] = w.from, [bx, by] = w.to, L = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / L, uy = (by - ay) / L;
+    const start = (o.hinge || 'start') === 'start', hs = start ? o.offset : o.offset + o.width;
+    const hx = ax + ux * hs, hy = ay + uy * hs, cx = start ? ux : -ux, cy = start ? uy : -uy;
+    const sg = (o.swing || 'left') === 'left' ? 1 : -1, sx = -uy * sg, sy = ux * sg;
+    const mid = [hx + (cx + sx) * o.width * 0.4, hy + (cy + sy) * o.width * 0.4];
+    if (!inPoly(mid[0], mid[1], poly)) continue;
+    const fan = [[hx, hy]];
+    for (let t = 0; t <= 90; t += 10) { const a = t * Math.PI / 180; fan.push([hx + o.width * (cx * Math.cos(a) + sx * Math.sin(a)), hy + o.width * (cy * Math.cos(a) + sy * Math.sin(a))]); }
+    out.push({ op: o, poly: fan, mid });
+  }
+  return out;
+}
+function makeZoneLabel(text, kind, at, h = 0.06) {
+  const el = makeLabel('zl', esc(text)); el.style.setProperty('--zc', ZCOL[kind] || '#555');
+  const L = { el, p: P3(at[0], at[1], h) }; zoneLabels.push(L); return L;
+}
+function showHighlight() {
+  hl.clear(); for (const z of zoneLabels) z.el.remove(); zoneLabels.length = 0;
+  const { room, sec } = state.sel; if (!room) return;
+  const r = roomById[room];
+  hl.add(outline(r.poly, 0.03));
+  if (!sec) hl.add(flatPoly(r.poly, 0.012, hlFill));
+  else {
+    const x = secById[sec], [sx, sy, sw, sd] = x.rect.map(v => v * MM), sh = (x.h || 800) * MM;
+    hl.add(flatPoly(rectPolyMM(x.rect), 0.016, hlFill));
+    const e = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(sw + 0.04, sh + 0.02, sd + 0.04)), hlEdge);
+    e.position.set(sx + sw / 2, sh / 2, -(sy + sd / 2)); hl.add(e);
+  }
+  for (const f of doorFans(r.poly)) { hl.add(flatPoly(f.poly, 0.022, zoneMat('door'))); makeZoneLabel(`Door swing ${(f.op.width / 1000).toFixed(2)} m`, 'door', f.mid); }
+  for (const z of (PLAN.zones || []).filter(z => z.room === room)) {
+    hl.add(flatPoly(rectPolyMM(z.rect), 0.02, zoneMat(z.kind)));
+    makeZoneLabel(`${z.name} ${(z.rect[2] / 1000).toFixed(2)} × ${(z.rect[3] / 1000).toFixed(2)} m`, z.kind, [z.rect[0] + z.rect[2] / 2, z.rect[1] + z.rect[3] / 2]);
+  }
+  for (const v of (PLAN.services || []).filter(v => v.room === room)) {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(0.06, 14, 10), new THREE.MeshBasicMaterial({ color: 0x1f5fa8 }));
+    m.position.copy(P3(v.at[0], v.at[1], (v.h || 0) * MM + 0.06)); hl.add(m);
+    makeZoneLabel(v.name, 'service', v.at, (v.h || 0) * MM + 0.3);
+  }
+}
+
+// walls between the camera and the selection turn see-through
+const ghostMat = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.1, depthWrite: false, roughness: 1 });
+const wallMeshes = Object.values(wallParts).flat().filter(o => o.isMesh && Array.isArray(o.material));
+let ghosted = new Set(), ghostTick = 0;
+const lastGhostCam = new THREE.Vector3(1e9, 0, 0);
+function setGhost(id, on) {
+  for (const o of wallParts[id] || []) {
+    if (o.isMesh && (Array.isArray(o.material) || o.userData.mats)) {
+      if (on) { if (!o.userData.mats) o.userData.mats = o.material; o.material = ghostMat; o.castShadow = false; }
+      else if (o.userData.mats) { o.material = o.userData.mats; o.userData.mats = null; o.castShadow = true; }
+    } else o.visible = !on;
+  }
+}
+function focusBox() {
+  const { room, sec } = state.sel;
+  if (sec) { const x = secById[sec], [sx, sy, sw, sd] = x.rect.map(v => v * MM); return { x0: sx, y0: sy, x1: sx + sw, y1: sy + sd, h: (x.h || 800) * MM }; }
+  const q = roomById[room].poly, xs = q.map(v => v[0] * MM), ys = q.map(v => v[1] * MM);
+  return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys), h: 1.2 };
+}
+function updateGhosts() {
+  const want = new Set();
+  if (state.mode === 'overview' && state.sel.room) {
+    const b = focusBox(), cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, yh = Math.min(b.h, 1.4) * 0.6;
+    const pts = [[cx, cy], [b.x0 + 0.15, b.y0 + 0.15], [b.x1 - 0.15, b.y0 + 0.15], [b.x0 + 0.15, b.y1 - 0.15], [b.x1 - 0.15, b.y1 - 0.15]];
+    for (const [x, y] of pts) {
+      const target = new THREE.Vector3(x, yh, -y);
+      rayDir.subVectors(target, camera.position); const dist = rayDir.length(); rayDir.normalize();
+      ray.set(camera.position, rayDir); ray.far = dist - 0.2;
+      for (const h of ray.intersectObjects(wallMeshes, false)) want.add(h.object.userData.wallId);
+    }
+  }
+  let changed = false;
+  for (const id of ghosted) if (!want.has(id)) { setGhost(id, false); changed = true; }
+  for (const id of want) if (!ghosted.has(id)) { setGhost(id, true); changed = true; }
+  ghosted = want; if (changed) renderer.shadowMap.needsUpdate = true;
+}
+
+// framing: the camera looks in from the entrance (rooms) or from the front (sections)
+const COMPASS = { s: [0, -1], n: [0, 1], e: [1, 0], w: [-1, 0], se: [0.707, -0.707], sw: [-0.707, -0.707], ne: [0.707, 0.707], nw: [-0.707, 0.707] };
+const FACING = { south: [0, -1], north: [0, 1], east: [1, 0], west: [-1, 0] };
+function viewDir() {
+  const { room, sec } = state.sel;
+  if (sec) return FACING[secById[sec].face] || [0, -1];
+  const r = roomById[room]; if (r.view_from) return COMPASS[r.view_from];
+  const [cx, cy] = centroid(r.poly);
+  for (const f of doorFans(r.poly)) { const dx = f.mid[0] - cx, dy = f.mid[1] - cy, l = Math.hypot(dx, dy); if (l > 1) return [dx / l, dy / l]; }
+  return [0, -1];
+}
+function frameSelection(instant = false) {
+  const b = focusBox(), x = state.sel.sec && secById[state.sel.sec];
+  const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2, size = Math.max(b.x1 - b.x0, b.y1 - b.y0, b.h * 0.9);
+  const tgt = new THREE.Vector3(cx, x ? b.h * 0.45 : 0.4, -cy);
+  const portrait = innerWidth / innerHeight < 1 ? Math.min(1.9, innerHeight / innerWidth) : 1;
+  let dist = (size * 0.5 / Math.tan(THREE.MathUtils.degToRad(17.5)) * 1.2 + (x ? 0.5 : 0.8)) * portrait;
+  dist = Math.max(dist, x && x.close ? 1.7 : x ? 2.4 : 4.5);
+  let pos;
+  if (state.topSel) pos = new THREE.Vector3(cx, tgt.y + dist * 1.1, -cy + 0.01);
+  else { const [vx, vy] = viewDir(), el = THREE.MathUtils.degToRad(x ? 36 : 56); pos = new THREE.Vector3(cx + vx * Math.cos(el) * dist, tgt.y + Math.sin(el) * dist, -(cy + vy * Math.cos(el) * dist)); }
+  if (instant || REDUCED) { camera.position.copy(pos); orbit.target.copy(tgt); orbit.update(); fly = null; }
+  else fly = { t: 0, p0: camera.position.clone(), p1: pos, t0: orbit.target.clone(), t1: tgt };
+  state.preset = state.topSel ? 'top' : 'iso'; markPreset();
+}
+
+const SRC = { sheet: ['Sheet', 'Printed on sheet A-01/00'], scaled: ['Estimate', 'Not printed on the sheet: scaled from the photo of the drawing, about ±0.1 m'],
+  proposed: ['Proposed', 'Option A design, not on the architect\'s sheet'], assumed: ['Assumed', 'Not on the sheet and not measured'] };
+const badge = (src) => { const [t, title] = SRC[src] || SRC.scaled; return `<span class="src s-${src in SRC ? src : 'scaled'}" title="${esc(title)}">${t}</span>`; };
+const fmt = (v) => typeof v === 'number' ? `${v.toFixed(2)} m` : v;
+function renderDetail() {
+  const { room, sec } = state.sel; if (!room) return;
+  const r = roomById[room], a = areaM2(r.poly), dims = r.dims || [];
+  const proposed = dims.some(d => d[2] === 'proposed');
+  let rows = [], note = '';
+  if (!sec) {
+    $('dKind').textContent = proposed ? 'Room · proposed in Option A' : 'Room';
+    $('dTitle').textContent = r.name;
+    $('dSub').textContent = proposed ? 'Created inside the former laundry balcony. Its sizes are a proposal, not on the architect\'s sheet.' : 'From sheet A-01/00, second floor.';
+    for (const d of dims) rows.push([d[0], fmt(d[1]), d[2], d[3]]);
+    rows.push(['Floor area', `${a.toFixed(1)} m² · ${Math.round(a * 10.7639)} sq ft`, proposed ? 'proposed' : dims.some(d => d[2] === 'scaled') ? 'scaled' : 'sheet', 'measured to wall centre-lines']);
+    note = PLAN.tour.points?.[room] || '';
+  } else {
+    const x = secById[sec], [, , sw, sd] = x.rect;
+    $('dKind').textContent = `Section · ${r.name}`;
+    $('dTitle').textContent = x.name;
+    $('dSub').textContent = x.src === 'proposed' ? 'Proposed layout. Sizes are design choices to confirm.' : x.src === 'sheet' ? 'Drawn on sheet A-01/00.' : 'Drawn on sheet A-01/00; sizes scaled from the drawing.';
+    rows.push(['Footprint', `${(sw / 1000).toFixed(2)} × ${(sd / 1000).toFixed(2)} m`, x.src || 'scaled']);
+    if (x.h) rows.push(['Height', `${(x.h / 1000).toFixed(2)} m`, x.src === 'proposed' ? 'proposed' : 'assumed']);
+    note = x.note || '';
+  }
+  $('dScale').textContent = state.topSel ? 'Top view' : '';
+  $('dDims').innerHTML = rows.map(([k, v, src, hint]) => `<tr><th>${esc(k)}</th><td>${esc(v)}${hint ? `<small>${esc(hint)}</small>` : ''}</td><td>${badge(src)}</td></tr>`).join('');
+  $('dNote').textContent = note; $('dNote').hidden = !note;
+  const list = secsOf(room), chips = $('dSecs'); chips.innerHTML = '';
+  if (list.length) {
+    const mk = (label, id) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = label; b.setAttribute('aria-pressed', String((id || null) === sec)); b.addEventListener('click', () => select(room, id)); chips.append(b); };
+    mk('Whole room', null); for (const x of list) mk(x.name, x.id);
+  }
+  chips.hidden = !list.length;
+  $('dTop').textContent = state.topSel ? 'Angled view' : 'Top view';
+  $('dUp').textContent = sec ? `Back to ${r.name}` : 'Back to overview';
+}
+function renderCrumbs() {
+  const nav = $('crumbs'), { room, sec } = state.sel; nav.innerHTML = '';
+  const add = (label, fn, current) => {
+    if (nav.children.length) { const c = document.createElement('span'); c.className = 'chev'; c.textContent = '›'; c.setAttribute('aria-hidden', 'true'); nav.append(c); }
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label; if (current) b.setAttribute('aria-current', 'page'); b.addEventListener('click', fn); nav.append(b);
+  };
+  add('Second Floor', () => select(null), !room);
+  if (room) add(roomById[room].name, () => select(room, null), !sec);
+  if (sec) add(secById[sec].name, () => select(room, sec), true);
+}
+function renderSpaces() {
+  const ul = $('spList'); ul.innerHTML = '';
+  const row = (label, meta, cur, fn) => { const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<span>${esc(label)}</span><small>${esc(meta)}</small>`; if (cur) b.setAttribute('aria-current', 'true'); b.addEventListener('click', () => { fn(); if (innerWidth <= 760) toggleSpaces(false); }); return b; };
+  for (const r of rooms) {
+    const li = document.createElement('li'), a = areaM2(r.poly);
+    li.append(row(r.name, `${a.toFixed(1)} m²`, state.sel.room === r.id && !state.sel.sec, () => select(r.id, null)));
+    const secs = secsOf(r.id);
+    if (secs.length) { const sub = document.createElement('ul'); for (const x of secs) { const li2 = document.createElement('li'); li2.append(row(x.name, `${(x.rect[2] / 1000).toFixed(2)} × ${(x.rect[3] / 1000).toFixed(2)} m`, state.sel.sec === x.id, () => select(r.id, x.id))); sub.append(li2); } li.append(sub); }
+    ul.append(li);
+  }
+}
+function toggleSpaces(on) { $('spaces').hidden = !on; $('spacesBtn').setAttribute('aria-pressed', String(on)); $('spacesBtn').setAttribute('aria-expanded', String(on)); if (on) renderSpaces(); }
+function select(room, sec = null) {
+  if (state.mode !== 'overview') { stopTour(); setMode('overview'); }
+  if (sec && !room) room = secById[sec].room;
+  state.sel = { room: room || null, sec: room ? sec || null : null };
+  if (!room) state.topSel = false;
+  setRotate(false);
+  orbit.minDistance = room ? 1.1 : 5;
+  $('panel').hidden = !!room; $('detail').hidden = !room;
+  showHighlight(); renderDetail(); renderCrumbs(); if (!$('spaces').hidden) renderSpaces();
+  dimGroup.visible = state.mode === 'overview' && state.dims && !room;
+  applyViewOffset();
+  if (room) frameSelection(); else goPreset('iso');
+  ghostTick = 0;
+}
+function goUp() { const { room, sec } = state.sel; if (sec) select(room, null); else if (room) select(null); }
+
+// click or tap (not drag) in the overview picks what is under the pointer
+let downAt = null;
+cvs.addEventListener('pointerdown', (e) => { if (state.mode === 'overview') downAt = { x: e.clientX, y: e.clientY, t: performance.now() }; });
+cvs.addEventListener('pointerup', (e) => {
+  if (state.mode !== 'overview' || !downAt) return;
+  const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y), quick = performance.now() - downAt.t < 650; downAt = null;
+  if (moved > 6 || !quick) return;
+  ray.setFromCamera(new THREE.Vector2(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1), camera); ray.far = Infinity;
+  const hit = ray.intersectObjects([house, furniture], true).find(h => h.object.visible && h.object.material !== ghostMat);
+  if (!hit) return;
+  const d = ray.ray.direction, px = hit.point.x, py = -hit.point.z;
+  const room = roomAt(px, py) || roomAt(px + d.x * 0.25, py - d.z * 0.25);
+  const sec = SECTIONS.find(x => { const [sx, sy, sw, sd] = x.rect; return px * 1000 > sx - 60 && px * 1000 < sx + sw + 60 && py * 1000 > sy - 60 && py * 1000 < sy + sd + 60 && (!room || x.room === room.id); });
+  if (state.sel.room && sec && sec.room === state.sel.room) return select(sec.room, sec.id);
+  if (room && room.id !== state.sel.room) return select(room.id, null);
+  if (room && state.sel.sec && !sec) return select(room.id, null);
+});
 
 /* ---------------------------------------------------------------- tour */
 const TP = PLAN.tour.path.map(p => ({ ...p, v: new THREE.Vector3(p.at[0] * MM, EYE, -p.at[1] * MM) }));
@@ -1235,8 +1596,18 @@ document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click
 $('infoBtn').addEventListener('click', () => { $('info').hidden = false; });
 $('contactBtn').addEventListener('click', () => { $('contact').hidden = false; });
 for (const id of ['info', 'contact']) $(id).addEventListener('click', e => { if (e.target.id === id) closeSheets(); });
-addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('info').hidden || !$('contact').hidden) closeSheets(); } });
-for (const b of $('presetGrp').children) b.addEventListener('click', () => { setRotate(false); goPreset(b.dataset.preset); });
+addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('info').hidden || !$('contact').hidden) closeSheets(); else if (!$('spaces').hidden) toggleSpaces(false); else if (state.mode === 'overview') goUp(); } });
+for (const b of $('presetGrp').children) b.addEventListener('click', () => {
+  setRotate(false); const pz = b.dataset.preset;
+  if (state.sel.room && (pz === 'top' || pz === 'iso')) { state.topSel = pz === 'top'; renderDetail(); frameSelection(); return; }
+  if (state.sel.room) select(null);
+  goPreset(pz);
+});
+$('spacesBtn').addEventListener('click', () => toggleSpaces($('spaces').hidden));
+$('spClose').addEventListener('click', () => toggleSpaces(false));
+$('dTop').addEventListener('click', () => { state.topSel = !state.topSel; renderDetail(); frameSelection(); });
+$('dUp').addEventListener('click', goUp);
+renderCrumbs();
 $('rotBtn').addEventListener('click', () => setRotate(!state.rotate));
 $('roomsBtn').addEventListener('click', () => { state.rooms = !state.rooms; $('roomsBtn').setAttribute('aria-pressed', String(state.rooms)); });
 $('dimsBtn').addEventListener('click', () => { state.dims = !state.dims; $('dimsBtn').setAttribute('aria-pressed', String(state.dims)); dimGroup.visible = state.mode === 'overview' && state.dims; });
@@ -1309,7 +1680,7 @@ function frame(now) {
 }
 $('loading').remove();
 requestAnimationFrame(frame);
-window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms, goPreset, setRotate, dimLabels };
+window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms, goPreset, setRotate, dimLabels, select, frameSelection, ghosted: () => [...ghosted] };
 </script>
 
 </body>
