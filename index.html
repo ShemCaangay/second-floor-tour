@@ -8,132 +8,148 @@
 <title>Second Floor Tour</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: full-bleed 3D canvas; glass control rails pinned to the screen edges; one welcome sheet on top. */
+/* Layout: the floor sits like an architect's scale model on a gridded drafting table. Info card top-left,
+   view bar bottom-centre, labels pinned to the model. One light look, chosen on purpose. */
 :root {
-  color-scheme: dark;
-  --ink: #0e1311;            /* night ground behind the canvas */
-  --panel: rgba(18, 24, 22, 0.78);
-  --panel-solid: #161d1a;
-  --line: rgba(236, 241, 235, 0.14);
-  --fg: #eef1ec;
-  --muted: #a7b1ab;
-  --accent: #e3b25e;         /* brass: the sunset light the tour is built around */
-  --accent-ink: #1b1408;
-  --warn: #f0c27a;
-  --font-ui: "Archivo", "Segoe UI", system-ui, sans-serif;
-  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-  --r: 12px;
+  color-scheme: light;
+  --bg: #dde3e7;
+  --panel: rgba(248, 246, 241, 0.88);
+  --panel-solid: #f8f6f1;
+  --line: rgba(29, 34, 38, 0.12);
+  --fg: #1d2226;
+  --muted: #5d656b;
+  --ink: #1f262b;            /* primary buttons, like a drafting pen */
+  --on-ink: #f8f6f1;
+  --accent: #a2702f;         /* brass: tour steps, time thumb */
+  --warn-bg: #fbe5c2; --warn-fg: #6e4205;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-ui: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --r: 18px;
 }
 [hidden] { display: none !important; }
-html, body { height: 100%; overflow: hidden; background: var(--ink); color: var(--fg); font-family: var(--font-ui); }
+html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--font-ui); }
 #stage { position: fixed; inset: 0; touch-action: none; }
 #stage canvas { display: block; width: 100%; height: 100%; outline: none; }
-button { font: inherit; color: inherit; cursor: pointer; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.glass { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+button, a.btn { font: inherit; color: inherit; cursor: pointer; text-decoration: none; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.glass { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(31, 38, 43, 0.10); }
+body[data-mode="walk"] .ov-only, body[data-mode="tour"] .ov-only, body[data-mode="rise"] .ov-only { display: none !important; }
+body:not([data-mode="walk"]):not([data-mode="tour"]) .walk-only { display: none !important; }
 
-/* top rail */
-#top { position: fixed; z-index: 5; left: 0; right: 0; top: 0; display: flex; gap: 10px; align-items: flex-start; justify-content: space-between;
-  padding: calc(env(safe-area-inset-top, 0px) + 12px) max(12px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px)); pointer-events: none; }
+/* top bar */
+#top { position: fixed; z-index: 5; left: 0; right: 0; top: 0; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); pointer-events: none; }
 #top > * { pointer-events: auto; }
-#brand { padding: 10px 14px; display: grid; gap: 2px; min-width: 0; }
-#brand b { font-weight: 600; font-size: 15px; letter-spacing: 0.01em; }
-#brand span { font-family: var(--font-data); font-size: 11px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
-#tools { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 9px 14px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height: 40px; }
-.btn:hover { border-color: rgba(236, 241, 235, 0.35); }
-.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
-.btn svg { width: 16px; height: 16px; flex: none; }
-.seg { display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+#brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 24px; letter-spacing: 0.005em; }
+#brand svg { width: 22px; height: 22px; }
+#tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end; }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .seg button { border: 0; background: transparent; padding: 7px 12px; border-radius: 999px; font-size: 13px; color: var(--muted); min-height: 34px; }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--fg); font-weight: 600; box-shadow: 0 1px 4px rgba(31,38,43,.12); }
 .seg .short { display: none; }
-.seg button[aria-pressed="true"] { background: var(--fg); color: var(--ink); font-weight: 600; }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 8px 13px; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 7px; min-height: 40px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.btn svg, .pill svg, .vb svg { width: 16px; height: 16px; flex: none; }
 
-/* room name while walking */
-#roomTag { position: fixed; z-index: 4; left: 50%; transform: translateX(-50%); top: calc(env(safe-area-inset-top, 0px) + 74px); padding: 6px 12px; border-radius: 999px; font-size: 12px; font-family: var(--font-data); letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg); background: rgba(14, 19, 17, 0.55); border: 1px solid var(--line); pointer-events: none; transition: opacity .4s; white-space: nowrap; }
+/* info card */
+#panel { position: fixed; z-index: 4; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); width: min(400px, calc(100vw - 32px)); padding: 20px 24px 20px; display: grid; gap: 12px; }
+#panel .eyebrow { display: flex; justify-content: space-between; gap: 12px; font-family: var(--font-data); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+#panel h1 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(36px, 5vw, 50px); line-height: 0.98; letter-spacing: -0.01em; text-wrap: balance; }
+#panel .sub { margin: 0; color: var(--muted); font-size: 16px; line-height: 1.4; text-wrap: balance; }
+#panel dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 14px; }
+#panel dt { color: var(--muted); }
+#panel dd { margin: 0; }
+#panel hr { border: 0; border-top: 1px solid var(--line); margin: 2px 0; width: 100%; }
+#facts { display: flex; flex-wrap: wrap; gap: 6px; }
+#facts span { font-family: var(--font-data); font-size: 12px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 999px; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.5); }
+.note { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill { border: 1px solid var(--line); background: rgba(255,255,255,.7); border-radius: 999px; padding: 10px 16px; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; min-height: 42px; }
+.pill.dark { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
 
-/* bottom rail */
-#bottom { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap;
-  padding: 0 max(12px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 12px) max(12px, env(safe-area-inset-left, 0px)); pointer-events: none; }
+/* bottom: time + view bar */
+#bottom { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; display: flex; gap: 10px; align-items: flex-end; justify-content: center; flex-wrap: wrap;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 14px) max(16px, env(safe-area-inset-left, 0px)); pointer-events: none; }
 #bottom > * { pointer-events: auto; }
-#timeBox { padding: 10px 14px 12px; flex: 1 1 360px; max-width: 520px; min-width: 0; display: grid; gap: 6px; }
+#viewbar { display: flex; align-items: center; gap: 4px; padding: 6px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+#viewbar::-webkit-scrollbar { display: none; }
+.grp { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: rgba(29,34,38,.05); }
+.grp button, .vb { border: 0; background: transparent; padding: 8px 12px; border-radius: 10px; font-size: 13.5px; color: var(--muted); white-space: nowrap; min-height: 38px; display: inline-flex; align-items: center; gap: 6px; }
+.grp button[aria-pressed="true"], .vb[aria-pressed="true"] { background: #fff; color: var(--fg); font-weight: 600; box-shadow: 0 1px 4px rgba(31,38,43,.12); }
+.vb:hover, .grp button:hover { color: var(--fg); }
+.sep { width: 1px; align-self: stretch; margin: 6px 4px; background: var(--line); flex: none; }
+#viewbar .pill { white-space: nowrap; min-height: 40px; padding: 8px 14px; font-size: 13.5px; }
+#timeBox { padding: 10px 14px 10px; width: 290px; max-width: 100%; display: grid; gap: 4px; }
 #timeBox .row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 #timeBox label { font-size: 12px; color: var(--muted); }
 #clock { font-family: var(--font-data); font-size: 13px; font-variant-numeric: tabular-nums; }
-#time { width: 100%; accent-color: var(--accent); height: 28px; }
-#ticks { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
-#tourBtn { min-height: 48px; padding: 12px 20px; font-size: 15px; }
+#time { width: 100%; accent-color: var(--accent); height: 24px; margin: 0; }
+#ticks { display: flex; justify-content: space-between; font-family: var(--font-data); font-size: 9.5px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
 
-/* tour card */
-#card { position: fixed; z-index: 6; left: max(12px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 112px); width: min(360px, calc(100vw - 24px)); padding: 14px 16px; display: grid; gap: 6px; transition: opacity .5s, transform .5s; }
-#card[data-show="false"] { opacity: 0; transform: translateY(8px); pointer-events: none; }
+/* labels pinned to the model */
+#labels { position: fixed; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+#labels > div { position: absolute; left: 0; top: 0; will-change: transform; white-space: nowrap; }
+.rl { padding: 5px 10px 6px; border-radius: 10px; background: rgba(248,246,241,.92); border: 1px solid var(--line); box-shadow: 0 2px 10px rgba(31,38,43,.12); text-align: center; font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+.rl small { display: block; font: 500 11px var(--font-data); color: var(--muted); font-variant-numeric: tabular-nums; }
+.dim { font: 500 11.5px var(--font-data); color: #22303a; background: rgba(221,227,231,.95); padding: 0 4px; border-radius: 3px; font-variant-numeric: tabular-nums; }
+.dim.off { color: var(--warn-fg); background: var(--warn-bg); pointer-events: auto; cursor: help; }
+.dim i { font-style: normal; opacity: .75; }
+
+/* walking HUD */
+#roomTag { position: fixed; z-index: 4; left: 50%; transform: translateX(-50%); top: calc(env(safe-area-inset-top, 0px) + 72px); padding: 6px 12px; border-radius: 999px; font-size: 12px; font-family: var(--font-data); letter-spacing: 0.06em; text-transform: uppercase; background: var(--panel); border: 1px solid var(--line); pointer-events: none; transition: opacity .4s; white-space: nowrap; }
+#hint { position: fixed; z-index: 4; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 12px 16px; font-size: 13px; text-align: center; pointer-events: none; transition: opacity .6s; line-height: 1.5; max-width: calc(100vw - 32px); }
+#hint kbd { font-family: var(--font-data); font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; background: #fff; }
+#stick { position: fixed; z-index: 6; left: max(20px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 170px); width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--line); background: rgba(248,246,241,.4); touch-action: none; }
+#stick i { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: rgba(31,38,43,.75); }
+#card { position: fixed; z-index: 6; left: max(16px, env(safe-area-inset-left, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); width: min(360px, calc(100vw - 32px)); padding: 16px 18px; display: grid; gap: 4px; transition: opacity .5s, transform .5s; }
+#card[data-show="false"] { opacity: 0; transform: translateY(-6px); pointer-events: none; }
 #card .step { font-family: var(--font-data); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
-#card h2 { margin: 0; font-size: 22px; font-weight: 600; text-wrap: balance; }
+#card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.05; }
 #card .size { font-family: var(--font-data); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-#card p { margin: 2px 0 0; font-size: 14px; line-height: 1.45; }
-
-/* minimap */
-#mini { position: fixed; z-index: 5; right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); padding: 8px; }
-#mini canvas { display: block; width: 168px; height: 200px; cursor: crosshair; }
+#card p { margin: 4px 0 0; font-size: 14px; line-height: 1.45; }
+#mini { position: fixed; z-index: 5; right: max(16px, env(safe-area-inset-right, 0px)); top: calc(env(safe-area-inset-top, 0px) + 70px); padding: 8px; }
+#mini canvas { display: block; width: 150px; height: 180px; cursor: crosshair; }
 #mini small { display: block; margin-top: 4px; font-size: 10px; color: var(--muted); font-family: var(--font-data); text-align: center; }
 
-/* hint + joystick */
-#hint { position: fixed; z-index: 4; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 12px 16px; font-size: 13px; color: var(--fg); text-align: center; pointer-events: none; transition: opacity .6s; line-height: 1.5; max-width: calc(100vw - 32px); }
-#hint kbd { font-family: var(--font-data); font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
-#stick { position: fixed; z-index: 6; left: max(20px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); width: 120px; height: 120px; border-radius: 50%; border: 1px solid var(--line); background: rgba(14, 19, 17, 0.35); touch-action: none; }
-#stick i { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 50%; background: rgba(238, 241, 236, 0.85); }
-
 /* sheets */
-.sheet { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: calc(env(safe-area-inset-top, 0px) + 16px) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 16px) max(16px, env(safe-area-inset-left, 0px)); background: rgba(10, 14, 12, 0.45); overflow-y: auto; }
-.sheet > div { width: min(560px, 100%); padding: 26px 26px 22px; display: grid; gap: 14px; background: var(--panel-solid); }
-#welcome { background: linear-gradient(180deg, rgba(10,14,12,0.15), rgba(10,14,12,0.75)); }
-#welcome .eyebrow { font-family: var(--font-data); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-#welcome h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); font-weight: 700; line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
-#welcome .sub { color: var(--muted); font-size: 15px; margin: 0; }
-#welcome dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 14px; }
-#welcome dt { color: var(--muted); }
-#welcome dd { margin: 0; font-variant-numeric: tabular-nums; }
-#facts { display: flex; flex-wrap: wrap; gap: 8px; }
-#facts span { font-family: var(--font-data); font-size: 12px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; font-variant-numeric: tabular-nums; }
-.note { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
-.note b { color: var(--warn); font-weight: 600; }
-.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.sheet { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; overflow-y: auto; background: rgba(29,34,38,.25);
+  padding: calc(env(safe-area-inset-top, 0px) + 16px) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 16px) max(16px, env(safe-area-inset-left, 0px)); }
+.sheet > div { width: min(560px, 100%); padding: 24px; display: grid; gap: 14px; background: var(--panel-solid); }
+.sheet h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 32px; }
 #info ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; line-height: 1.45; }
-#info h2, #contact h2 { margin: 0; font-size: 20px; }
 #contact .num { font-family: var(--font-data); font-size: 20px; user-select: all; }
-#loading { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; background: var(--ink); font-family: var(--font-data); font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+#loading { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; background: var(--bg); font-family: var(--font-data); font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
 
-@media (max-width: 640px) {
-  #brand span { display: none; }
-  #brand b { font-size: 13px; }
+@media (max-width: 760px) {
+  #brand { font-size: 20px; }
+  .btn .lbl { display: none; }
+  .btn { padding: 8px 10px; }
   .seg .long { display: none; } .seg .short { display: inline; }
   .seg button { padding: 7px 9px; }
-  #top { flex-wrap: wrap; }
-  #mini canvas { width: 112px; height: 134px; }
+  #panel { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 168px); padding: 14px 16px; gap: 8px; }
+  #panel h1 { font-size: 32px; }
+  #panel .sub { font-size: 14px; }
+  #panel .note, #panel hr, #panel .actions { display: none; }
+  #timeBox { width: 100%; }
+  #mini canvas { width: 104px; height: 125px; }
   #mini small { display: none; }
-  #mini { bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); }
-  #card { bottom: calc(env(safe-area-inset-bottom, 0px) + 150px); width: calc(100vw - 150px); }
-  #timeBox { flex-basis: 100%; max-width: none; }
-  .btn .lbl { display: none; }
-  .btn { padding: 9px 11px; }
-  #tourBtn .lbl { display: inline; }
+  #card { top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 168px); }
 }
 @media (prefers-reduced-motion: reduce) { #card, #hint, #roomTag { transition: none; } }
 </style>
 
 </head>
 <body>
-<div id="stage" aria-label="3D view of the second floor"></div>
-<div id="loading">Building the floor…</div>
+<div id="stage" aria-label="3D model of the second floor"></div>
+<div id="labels" aria-hidden="true"></div>
+<div id="loading">Building the model…</div>
 
 <header id="top">
-  <div id="brand" class="glass"><b id="brandName">Second Floor</b><span id="brandSub">Draft · scaled from sheet A-01/00</span></div>
-  <nav id="tools" aria-label="View controls">
+  <div id="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3.5 3.5h17v17h-17z"/><path d="M3.5 12h7v8.5M10.5 3.5V9M14 12h6.5M14 12v4"/></svg><span id="brandName">Second Floor</span></div>
+  <nav id="tools" aria-label="Settings">
     <div class="seg" role="group" aria-label="Interior style" id="styleSeg"></div>
-    <button class="btn" id="viewBtn" type="button" aria-pressed="false" title="Switch between walking and the roof-off dollhouse view">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 4l9 6.5V20H3z"/><path d="M3 10.5h18"/></svg><span class="lbl" id="viewLbl">Dollhouse</span></button>
     <button class="btn" id="muteBtn" type="button" aria-pressed="false" title="Music on or off">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9h4l5-4v14l-5-4H4z"/><path id="muteWave" d="M16.5 8.5a5 5 0 0 1 0 7"/><path id="muteX" d="m16 9 5 6m0-6-5 6"/></svg><span class="lbl" id="muteLbl">Music</span></button>
     <button class="btn" id="contactBtn" type="button" hidden>
@@ -142,6 +158,20 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span class="lbl">About</span></button>
   </nav>
 </header>
+
+<section id="panel" class="glass ov-only" aria-labelledby="pTitle">
+  <div class="eyebrow"><span id="pEyebrow">Sheet A-01/00 · Rev Oct 2025</span><span>1 : 100</span></div>
+  <h1 id="pTitle">Second Floor</h1>
+  <p class="sub" id="pSub"></p>
+  <dl id="pFacts" hidden></dl>
+  <div class="actions">
+    <button class="pill dark" id="walkBtn2" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="4.5" r="1.8"/><path d="m9 21 2-6-2-3 1-4h3l3 4M11 15l3 2v4"/></svg>Walk through</button>
+    <button class="pill" id="tourBtn2" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Guided tour</button>
+  </div>
+  <hr>
+  <div id="facts"></div>
+  <p class="note" id="pNote"></p>
+</section>
 
 <div id="roomTag" style="opacity:0"></div>
 <div id="hint" class="glass" style="opacity:0"></div>
@@ -154,37 +184,37 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
   <p id="cardText"></p>
 </aside>
 
-<div id="mini" class="glass"><canvas id="miniCanvas" width="336" height="400" aria-label="Floor plan with your position"></canvas><small>Tap a room to jump there</small></div>
+<div id="mini" class="glass walk-only"><canvas id="miniCanvas" width="300" height="360" aria-label="Floor plan with your position"></canvas><small>Tap a room to jump there</small></div>
 
 <footer id="bottom">
   <div id="timeBox" class="glass">
-    <div class="row"><label for="time">Time of day</label><span id="clock">10:00 AM</span></div>
+    <div class="row"><label for="time">Daylight</label><span id="clock">10:00 AM</span></div>
     <input id="time" type="range" min="0" max="1000" step="1" value="267">
     <div id="ticks" aria-hidden="true"><span>Morning</span><span>Noon</span><span>Sunset</span><span>Night</span></div>
   </div>
-  <button class="btn primary" id="tourBtn" type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span class="lbl" id="tourLbl">Start Tour</span></button>
-</footer>
-
-<section class="sheet" id="welcome" aria-labelledby="wTitle">
-  <div class="glass">
-    <div class="eyebrow" id="wEyebrow">3D walkthrough</div>
-    <h1 id="wTitle">Second Floor</h1>
-    <p class="sub" id="wSub"></p>
-    <dl id="wFacts"></dl>
-    <div id="facts"></div>
-    <p class="note" id="wNote"></p>
-    <div class="actions">
-      <button class="btn primary" id="startBtn" type="button">Start</button>
-      <button class="btn" id="startTourBtn" type="button">Start with the guided tour</button>
+  <nav id="viewbar" class="glass" aria-label="Model controls">
+    <div class="grp ov-only" role="group" aria-label="Camera angle" id="presetGrp">
+      <button type="button" data-preset="iso" aria-pressed="true">3/4</button>
+      <button type="button" data-preset="top" aria-pressed="false">Top</button>
+      <button type="button" data-preset="front" aria-pressed="false">Front</button>
+      <button type="button" data-preset="side" aria-pressed="false">Side</button>
     </div>
-  </div>
-</section>
+    <span class="sep ov-only"></span>
+    <button type="button" class="vb ov-only" id="rotBtn" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>Rotate</button>
+    <button type="button" class="vb ov-only" id="roomsBtn" aria-pressed="true">Rooms</button>
+    <button type="button" class="vb ov-only" id="dimsBtn" aria-pressed="true">Dimensions</button>
+    <button type="button" class="vb walk-only" id="backBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3.5 3.5h17v17h-17z"/><path d="M3.5 12h7v8.5M10.5 3.5V9"/></svg>Back to model</button>
+    <span class="sep"></span>
+    <button type="button" class="pill dark ov-only" id="walkBtn">Walk through</button>
+    <button type="button" class="pill" id="tourBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="tourLbl">Start Tour</span></button>
+  </nav>
+</footer>
 
 <section class="sheet" id="info" hidden aria-labelledby="iTitle">
   <div class="glass">
     <h2 id="iTitle">About this model</h2>
     <ul id="infoList"></ul>
-    <div class="actions"><button class="btn primary" type="button" data-close>Close</button></div>
+    <div class="actions"><button class="pill dark" type="button" data-close>Close</button></div>
   </div>
 </section>
 
@@ -193,7 +223,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
     <h2 id="cTitle">Contact</h2>
     <div id="cName"></div>
     <div class="num" id="cPhone"></div>
-    <div class="actions"><button class="btn" type="button" id="copyBtn">Copy number</button><a class="btn" id="callLink" href="#">Call</a><button class="btn primary" type="button" data-close>Close</button></div>
+    <div class="actions"><button class="pill" type="button" id="copyBtn">Copy number</button><a class="pill" id="callLink" href="#">Call</a><button class="pill dark" type="button" data-close>Close</button></div>
   </div>
 </section>
 
@@ -211,7 +241,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 /* ---------------------------------------------------------------- data */
-const PLAN = {"meta":{"title":"Second floor - proposed (A-01/00 REV_OCT2025)","status":"DRAFT","scale":50,"north_deg":null,"source":"sheet A-01/00 photo; written dimensions plus scaled values, see header","ceiling_height_assumed":2700,"wall_t_exterior_assumed":150,"wall_t_interior_assumed":100,"trace":{"image":"site/measurements/A-01-00_second-floor-plan_REV-OCT2025_photo-b.jpg","origin_px":[590,2320],"px_per_m_x":116.3,"px_per_m_y":115.7,"shear_px_per_px":0.0244}},"rooms":[{"id":"living","name":"Living","polygon":[[3970,0],[8480,0],[9490,1430],[9490,5150],[10140,5720],[3970,5720]],"ceiling_height":null},{"id":"dining","name":"Dining","polygon":[[3970,5720],[10140,5720],[10290,5850],[10290,8350],[9490,8980],[3970,8980]],"ceiling_height":null},{"id":"laundry","name":"Laundry","polygon":[[3970,8980],[9490,8980],[9490,11600],[3970,11600]],"ceiling_height":null},{"id":"kitchen","name":"Kitchen","polygon":[[0,0],[3970,0],[3970,5090],[0,5090]],"ceiling_height":null},{"id":"hall","name":"Hall","polygon":[[2800,5090],[3970,5090],[3970,6590],[2800,6590]],"ceiling_height":null},{"id":"tb2","name":"Toilet & Bath 2","polygon":[[0,5090],[2800,5090],[2800,6590],[0,6590]],"ceiling_height":null},{"id":"bedroom","name":"Bedroom 01","polygon":[[0,6590],[3970,6590],[3970,11600],[1910,11600],[1910,10200],[-990,10200],[-990,8480],[0,7180]],"ceiling_height":null},{"id":"tb1","name":"Toilet & Bath 1","polygon":[[-990,10200],[1910,10200],[1910,11600],[-490,11600],[-990,11100]],"ceiling_height":null},{"id":"porch","name":"Second Floor Porch","polygon":[[4250,-1430],[5500,-1430],[5500,0],[4250,0]],"ceiling_height":null,"outdoor":true}],"walls":[{"id":"N1a","from":[-990,11100],"to":[-840,11450],"t":150},{"id":"N1b","from":[-840,11450],"to":[-490,11600],"t":150},{"id":"N1","from":[-490,11600],"to":[1910,11600],"t":150},{"id":"N2","from":[1910,11600],"to":[3970,11600],"t":150},{"id":"NL","from":[3970,11600],"to":[9490,11600],"t":60,"kind":"railing"},{"id":"EL","from":[9490,11600],"to":[9490,8980],"t":60,"kind":"railing"},{"id":"E1","from":[9490,8980],"to":[10290,8350],"t":150},{"id":"E2","from":[10290,8350],"to":[10290,5850],"t":150},{"id":"E3","from":[10290,5850],"to":[9490,5150],"t":150},{"id":"E4","from":[9490,5150],"to":[9490,1430],"t":150},{"id":"E5","from":[9490,1430],"to":[8480,0],"t":150},{"id":"S1","from":[8480,0],"to":[3970,0],"t":150},{"id":"S2","from":[3970,0],"to":[0,0],"t":150},{"id":"W1","from":[0,0],"to":[0,7180],"t":150},{"id":"W2","from":[0,7180],"to":[-990,8480],"t":150},{"id":"W3","from":[-990,8480],"to":[-990,11100],"t":150},{"id":"P1","from":[3970,11600],"to":[3970,5720],"t":100},{"id":"P2","from":[3970,3950],"to":[3970,0],"t":100},{"id":"LD","from":[3970,8980],"to":[9490,8980],"t":100},{"id":"B1S","from":[-990,10200],"to":[2650,10200],"t":100},{"id":"B1E","from":[1910,11600],"to":[1910,10200],"t":100},{"id":"BRS","from":[0,6590],"to":[3970,6590],"t":100},{"id":"T2E","from":[2800,6590],"to":[2800,5090],"t":100},{"id":"T2P","from":[1170,6590],"to":[1170,5090],"t":100},{"id":"T2S","from":[0,5090],"to":[2800,5090],"t":100},{"id":"B1G","from":[0,11600],"to":[0,10200],"t":20,"kind":"glass"},{"id":"PE","from":[5500,0],"to":[5500,-2700],"t":150},{"id":"PR","from":[4250,-1430],"to":[5500,-1430],"t":50,"kind":"railing"},{"id":"SW","from":[0,0],"to":[0,-2700],"t":150},{"id":"SS","from":[1000,-2700],"to":[5500,-2700],"t":150}],"columns":[{"at":[0,11600],"size":300},{"at":[3970,11600],"size":300},{"at":[8480,11600],"size":300},{"at":[0,5540],"size":300},{"at":[3970,3950],"size":300},{"at":[8480,5720],"size":300},{"at":[3970,6960],"size":150},{"at":[0,0],"size":350,"round":true},{"at":[3970,0],"size":350,"round":true},{"at":[8480,0],"size":350,"round":true}],"openings":[{"id":"D-entry","wall":"S1","type":"door","offset":3230,"width":870,"height":2100,"hinge":"end","swing":"right","note":"from porch into living"},{"id":"D-bed","wall":"BRS","type":"door","offset":2970,"width":750,"height":2100,"hinge":"end","swing":"left"},{"id":"D-tb1","wall":"B1E","type":"door","offset":640,"width":700,"height":2100,"hinge":"end","swing":"right"},{"id":"D-tb2","wall":"T2E","type":"door","offset":200,"width":700,"height":2100,"hinge":"start","swing":"right","note":"exact door unclear on sheet"},{"id":"D-tb2wc","wall":"T2P","type":"door","offset":200,"width":600,"height":2100,"hinge":"start","swing":"right","note":"assumed"},{"id":"D-lau","wall":"LD","type":"door","offset":160,"width":800,"height":2100,"hinge":"start","swing":"left"},{"id":"W-liv-s","wall":"S1","type":"window","offset":280,"width":1990,"height":1200,"sill":900,"room":"living"},{"id":"W-liv-e","wall":"E4","type":"window","offset":300,"width":3120,"height":1500,"sill":600,"room":"living"},{"id":"W-liv-se","wall":"E5","type":"window","offset":300,"width":1150,"height":1500,"sill":600,"room":"living"},{"id":"W-din-e","wall":"E2","type":"window","offset":200,"width":2100,"height":1500,"sill":600,"room":"dining"},{"id":"W-din-l","wall":"LD","type":"window","offset":1560,"width":2740,"height":1000,"sill":1000,"room":"dining","note":"between dining and open laundry"},{"id":"W-kit-w","wall":"W1","type":"window","offset":1000,"width":1000,"height":1000,"sill":1050,"room":"kitchen","note":"over sink"},{"id":"W-kit-s","wall":"S2","type":"window","offset":1700,"width":770,"height":600,"sill":1500,"room":"kitchen","note":"behind range per sheet ticks; check"},{"id":"W-nook","wall":"N2","type":"window","offset":20,"width":900,"height":1000,"sill":1000,"room":"bedroom"},{"id":"W-tb1","wall":"N1","type":"window","offset":1500,"width":800,"height":500,"sill":1600,"room":"tb1"}],"furniture":[{"name":"Wardrobe","type":"wardrobe","rect":[-920,8040,390,1990],"h":2100,"face":"east","room":"bedroom"},{"name":"Headboard cabinet","type":"cabinet","rect":[-530,9550,3210,480],"h":900,"face":"south","room":"bedroom"},{"name":"Bed 1","type":"bed","rect":[-530,7980,1240,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Bed 2","type":"bed","rect":[1480,7980,1200,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Night table","type":"sidetable_round","rect":[830,8950,450,450],"h":550,"room":"bedroom"},{"name":"Wardrobe S","type":"wardrobe","rect":[130,6640,2670,450],"h":2100,"face":"north","room":"bedroom"},{"name":"Vanity desk","type":"desk","rect":[1990,11100,1880,420],"h":750,"face":"south","room":"bedroom"},{"name":"WC","type":"wc","rect":[150,11000,400,600],"h":400,"face":"south","rot":0,"room":"tb1"},{"name":"Lavatory","type":"lavatory","rect":[1050,11100,700,450],"h":850,"face":"south","room":"tb1"},{"name":"Shower 1","type":"shower","rect":[-940,10260,900,1300],"h":0,"room":"tb1"},{"name":"WC 2","type":"wc","rect":[380,5140,400,600],"h":400,"face":"north","room":"tb2"},{"name":"Shower 2","type":"shower","rect":[1250,5140,1500,1400],"h":0,"room":"tb2"},{"name":"Pantry","type":"counter","rect":[50,4460,2750,480],"h":900,"face":"south","upper":true,"room":"kitchen"},{"name":"Ref","type":"fridge","rect":[100,3470,650,760],"h":1800,"face":"east","room":"kitchen"},{"name":"Counter W","type":"counter","rect":[100,600,550,2870],"h":900,"face":"east","upper":true,"room":"kitchen"},{"name":"Sink","type":"sink","rect":[130,1000,500,960],"h":900,"face":"east","room":"kitchen"},{"name":"Counter S","type":"counter","rect":[100,50,3590,550],"h":900,"face":"north","room":"kitchen"},{"name":"Range","type":"range","rect":[1550,50,690,550],"h":900,"face":"north","room":"kitchen"},{"name":"Peninsula","type":"counter","rect":[3130,600,560,2180],"h":900,"face":"west","room":"kitchen"},{"name":"Island","type":"island","rect":[1520,1350,830,1500],"h":900,"room":"kitchen"},{"name":"Bench 1","type":"bench","rect":[4040,2840,300,840],"h":450,"face":"east","room":"living"},{"name":"Bench 2","type":"bench","rect":[4040,2000,300,840],"h":450,"face":"east","room":"living"},{"name":"Shoe rack","type":"cabinet","rect":[4040,60,300,1940],"h":1000,"face":"east","room":"living"},{"name":"TV console","type":"console","rect":[5950,80,2150,380],"h":500,"face":"north","room":"living"},{"name":"Sofa","type":"sofa","rect":[6290,3420,1780,800],"h":800,"face":"south","room":"living"},{"name":"Side table L","type":"sidetable","rect":[5640,3380,470,490],"h":550,"room":"living"},{"name":"Side table R","type":"sidetable","rect":[8110,3380,470,490],"h":550,"room":"living"},{"name":"Armchair 1","type":"armchair","rect":[5520,2160,790,830],"h":800,"face":"east","room":"living"},{"name":"Armchair 2","type":"armchair","rect":[5520,1300,790,790],"h":800,"face":"east","room":"living"},{"name":"Armchair 3","type":"armchair","rect":[8100,2200,790,800],"h":800,"face":"west","room":"living"},{"name":"Armchair 4","type":"armchair","rect":[8100,1300,790,800],"h":800,"face":"west","room":"living"},{"name":"Coffee table","type":"coffeetable","rect":[6920,1660,580,1040],"h":420,"room":"living"},{"name":"Dining table","type":"diningtable","rect":[6020,6620,2110,1060],"h":750,"seats":8,"room":"dining"},{"name":"Washer 1","type":"washer","rect":[8480,9980,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Washer 2","type":"washer","rect":[8480,9290,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Laundry tub","type":"tub","rect":[6000,11060,470,520],"h":850,"face":"south","room":"laundry"}],"tour":{"path":[{"at":[4870,-900],"stop":"porch"},{"at":[4820,500]},{"at":[5000,1300],"stop":"living","look":[7400,2600]},{"at":[4750,2300]},{"at":[4750,3800]},{"at":[5300,4500]},{"at":[5200,5600]},{"at":[5000,6600],"stop":"dining","look":[9200,7200]},{"at":[4550,8500]},{"at":[4550,9800],"stop":"laundry","look":[8000,10300]},{"at":[4550,8500]},{"at":[4700,5300]},{"at":[3350,4950]},{"at":[2900,3500],"stop":"kitchen","look":[1500,1200]},{"at":[3350,4950]},{"at":[3350,6150],"stop":"hall","look":[1800,5800]},{"at":[3350,7300]},{"at":[3300,9000],"stop":"bedroom","look":[0,8800]},{"at":[3300,10450]},{"at":[2400,10630]},{"at":[1450,10610],"stop":"tb1","look":[-500,11000]}],"points":{"porch":"Arrival from the exterior stair, straight into the living room.","living":"Glazing on two sides plus a splayed corner window.","dining":"Bay window projects 0.80 m past the line of the house.","laundry":"Open-air service area behind a railing, two washer bays.","kitchen":"L-shaped counter with a separate island and pantry wall.","hall":"Shared Toilet & Bath 2 off a private hall.","bedroom":"Twin beds, built-in wardrobes on two walls and a vanity nook.","tb1":"Ensuite with a walk-in shower behind glass."},"welcome":{"project":"Second Floor Renovation","subtitle":"Proposed layout from sheet A-01/00, REV OCT 2025","address":"","price":"","contact_name":"","contact_phone":""}}};
+const PLAN = {"meta":{"title":"Second floor - Option A, enclosed laundry + food storage","change_note":"Option A, the owner's change, encloses the sheet's open laundry behind the railing with walls and windows, and splits it into a Food Storage room and a Laundry room. This change is not on the architect's sheet yet.","status":"DRAFT","scale":50,"north_deg":null,"source":"sheet A-01/00 photo; written dimensions plus scaled values, see header","ceiling_height_assumed":2700,"wall_t_exterior_assumed":150,"wall_t_interior_assumed":100,"trace":{"image":"site/measurements/A-01-00_second-floor-plan_REV-OCT2025_photo-b.jpg","origin_px":[590,2320],"px_per_m_x":116.3,"px_per_m_y":115.7,"shear_px_per_px":0.0244}},"rooms":[{"id":"living","name":"Living","polygon":[[3970,0],[8480,0],[9490,1430],[9490,5150],[10140,5720],[3970,5720]],"ceiling_height":null},{"id":"dining","name":"Dining","polygon":[[3970,5720],[10140,5720],[10290,5850],[10290,8350],[9490,8980],[3970,8980]],"ceiling_height":null},{"id":"storage","name":"Food Storage","polygon":[[3970,8980],[5970,8980],[5970,11600],[3970,11600]],"ceiling_height":null},{"id":"laundry","name":"Laundry","wet":true,"polygon":[[5970,8980],[9490,8980],[9490,11600],[5970,11600]],"ceiling_height":null},{"id":"kitchen","name":"Kitchen","polygon":[[0,0],[3970,0],[3970,5090],[0,5090]],"ceiling_height":null},{"id":"hall","name":"Hall","polygon":[[2800,5090],[3970,5090],[3970,6590],[2800,6590]],"ceiling_height":null},{"id":"tb2","name":"Toilet & Bath 2","wet":true,"polygon":[[0,5090],[2800,5090],[2800,6590],[0,6590]],"ceiling_height":null},{"id":"bedroom","name":"Bedroom 01","polygon":[[0,6590],[3970,6590],[3970,11600],[1910,11600],[1910,10200],[-990,10200],[-990,8480],[0,7180]],"ceiling_height":null},{"id":"tb1","name":"Toilet & Bath 1","wet":true,"polygon":[[-990,10200],[1910,10200],[1910,11600],[-490,11600],[-990,11100]],"ceiling_height":null},{"id":"porch","name":"Second Floor Porch","polygon":[[4250,-1430],[5500,-1430],[5500,0],[4250,0]],"ceiling_height":null,"outdoor":true}],"walls":[{"id":"N1a","from":[-990,11100],"to":[-840,11450],"t":150},{"id":"N1b","from":[-840,11450],"to":[-490,11600],"t":150},{"id":"N1","from":[-490,11600],"to":[1910,11600],"t":150},{"id":"N2","from":[1910,11600],"to":[3970,11600],"t":150},{"id":"NL","from":[3970,11600],"to":[9490,11600],"t":150},{"id":"EL","from":[9490,11600],"to":[9490,8980],"t":150},{"id":"E1","from":[9490,8980],"to":[10290,8350],"t":150},{"id":"E2","from":[10290,8350],"to":[10290,5850],"t":150},{"id":"E3","from":[10290,5850],"to":[9490,5150],"t":150},{"id":"E4","from":[9490,5150],"to":[9490,1430],"t":150},{"id":"E5","from":[9490,1430],"to":[8480,0],"t":150},{"id":"S1","from":[8480,0],"to":[3970,0],"t":150},{"id":"S2","from":[3970,0],"to":[0,0],"t":150},{"id":"W1","from":[0,0],"to":[0,7180],"t":150},{"id":"W2","from":[0,7180],"to":[-990,8480],"t":150},{"id":"W3","from":[-990,8480],"to":[-990,11100],"t":150},{"id":"P1","from":[3970,11600],"to":[3970,5720],"t":100},{"id":"P2","from":[3970,3950],"to":[3970,0],"t":100},{"id":"LD","from":[3970,8980],"to":[9490,8980],"t":100},{"id":"SL","from":[5970,8980],"to":[5970,11600],"t":100},{"id":"B1S","from":[-990,10200],"to":[2670,10200],"t":100},{"id":"B1E","from":[1910,11600],"to":[1910,10200],"t":100},{"id":"BRS","from":[0,6590],"to":[3970,6590],"t":100},{"id":"T2E","from":[2800,6590],"to":[2800,5090],"t":100},{"id":"T2P","from":[1170,6590],"to":[1170,5090],"t":100},{"id":"T2S","from":[0,5090],"to":[2800,5090],"t":100},{"id":"B1G","from":[0,11600],"to":[0,10200],"t":20,"kind":"glass"},{"id":"PE","from":[5500,0],"to":[5500,-2700],"t":150},{"id":"PR","from":[4250,-1430],"to":[5500,-1430],"t":50,"kind":"railing"},{"id":"SW","from":[0,0],"to":[0,-2700],"t":150},{"id":"SS","from":[1000,-2700],"to":[5500,-2700],"t":150}],"columns":[{"at":[0,11600],"size":300},{"at":[3970,11600],"size":300},{"at":[8480,11600],"size":300},{"at":[0,5540],"size":300},{"at":[3970,3950],"size":300},{"at":[8480,5720],"size":300},{"at":[3970,6960],"size":150},{"at":[0,0],"size":350,"round":true},{"at":[3970,0],"size":350,"round":true},{"at":[8480,0],"size":350,"round":true}],"openings":[{"id":"D-entry","wall":"S1","type":"door","offset":3230,"width":870,"height":2100,"hinge":"end","swing":"right","note":"from porch into living"},{"id":"D-bed","wall":"BRS","type":"door","offset":2970,"width":750,"height":2100,"hinge":"end","swing":"left"},{"id":"D-tb1","wall":"B1E","type":"door","offset":640,"width":700,"height":2100,"hinge":"end","swing":"right"},{"id":"D-tb2","wall":"T2E","type":"door","offset":200,"width":700,"height":2100,"hinge":"start","swing":"right","note":"exact door unclear on sheet"},{"id":"D-tb2wc","wall":"T2P","type":"door","offset":200,"width":600,"height":2100,"hinge":"start","swing":"right","note":"assumed"},{"id":"D-sto","wall":"LD","type":"door","offset":160,"width":800,"height":2100,"hinge":"start","swing":"left","note":"the sheet's laundry door, now food storage"},{"id":"D-lau","wall":"LD","type":"door","offset":4480,"width":800,"height":2100,"hinge":"end","swing":"left","note":"OPTION A new door"},{"id":"W-liv-s","wall":"S1","type":"window","offset":280,"width":1990,"height":1200,"sill":900,"room":"living"},{"id":"W-liv-e","wall":"E4","type":"window","offset":300,"width":3120,"height":1500,"sill":600,"room":"living"},{"id":"W-liv-se","wall":"E5","type":"window","offset":300,"width":1150,"height":1500,"sill":600,"room":"living"},{"id":"W-din-e","wall":"E2","type":"window","offset":200,"width":2100,"height":1500,"sill":600,"room":"dining"},{"id":"W-din-l","wall":"LD","type":"window","offset":2430,"width":1840,"height":600,"sill":1500,"room":"dining","note":"OPTION A high borrowed-light window into the laundry"},{"id":"W-sto","wall":"NL","type":"window","offset":700,"width":800,"height":500,"sill":1600,"room":"storage","note":"OPTION A high vent window"},{"id":"W-lau-n","wall":"NL","type":"window","offset":2580,"width":1500,"height":900,"sill":1100,"room":"laundry","note":"OPTION A"},{"id":"W-lau-e","wall":"EL","type":"window","offset":300,"width":1100,"height":800,"sill":1200,"room":"laundry","note":"OPTION A above the washers"},{"id":"W-kit-w","wall":"W1","type":"window","offset":1000,"width":1000,"height":1000,"sill":1050,"room":"kitchen","note":"over sink"},{"id":"W-kit-s","wall":"S2","type":"window","offset":1700,"width":770,"height":600,"sill":1500,"room":"kitchen","note":"behind range per sheet ticks; check"},{"id":"W-nook","wall":"N2","type":"window","offset":20,"width":900,"height":1000,"sill":1000,"room":"bedroom"},{"id":"W-tb1","wall":"N1","type":"window","offset":1500,"width":800,"height":500,"sill":1600,"room":"tb1"}],"furniture":[{"name":"Wardrobe","type":"wardrobe","rect":[-920,8040,390,1990],"h":2100,"face":"east","room":"bedroom"},{"name":"Headboard cabinet","type":"cabinet","rect":[-530,9550,3210,480],"h":900,"face":"south","room":"bedroom"},{"name":"Bed 1","type":"bed","rect":[-530,7980,1240,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Bed 2","type":"bed","rect":[1480,7980,1200,1570],"h":500,"face":"south","room":"bedroom"},{"name":"Night table","type":"sidetable_round","rect":[830,8950,450,450],"h":550,"room":"bedroom"},{"name":"Wardrobe S","type":"wardrobe","rect":[130,6640,2670,450],"h":2100,"face":"north","room":"bedroom"},{"name":"Vanity desk","type":"desk","rect":[1990,11100,1880,420],"h":750,"face":"south","room":"bedroom"},{"name":"WC","type":"wc","rect":[150,11000,400,600],"h":400,"face":"south","rot":0,"room":"tb1"},{"name":"Lavatory","type":"lavatory","rect":[1050,11100,700,450],"h":850,"face":"south","room":"tb1"},{"name":"Shower 1","type":"shower","rect":[-940,10260,900,1300],"h":0,"room":"tb1"},{"name":"WC 2","type":"wc","rect":[380,5140,400,600],"h":400,"face":"north","room":"tb2"},{"name":"Shower 2","type":"shower","rect":[1250,5140,1500,1400],"h":0,"room":"tb2"},{"name":"Pantry","type":"counter","rect":[50,4460,2750,480],"h":900,"face":"south","upper":true,"room":"kitchen"},{"name":"Ref","type":"fridge","rect":[100,3470,650,760],"h":1800,"face":"east","room":"kitchen"},{"name":"Counter W","type":"counter","rect":[100,600,550,2870],"h":900,"face":"east","upper":true,"room":"kitchen"},{"name":"Sink","type":"sink","rect":[130,1000,500,960],"h":900,"face":"east","room":"kitchen"},{"name":"Counter S","type":"counter","rect":[100,50,3590,550],"h":900,"face":"north","room":"kitchen"},{"name":"Range","type":"range","rect":[1550,50,690,550],"h":900,"face":"north","room":"kitchen"},{"name":"Peninsula","type":"counter","rect":[3130,600,560,2180],"h":900,"face":"west","room":"kitchen"},{"name":"Island","type":"island","rect":[1520,1350,830,1500],"h":900,"room":"kitchen"},{"name":"Bench 1","type":"bench","rect":[4040,2840,300,840],"h":450,"face":"east","room":"living"},{"name":"Bench 2","type":"bench","rect":[4040,2000,300,840],"h":450,"face":"east","room":"living"},{"name":"Shoe rack","type":"cabinet","rect":[4040,60,300,1940],"h":1000,"face":"east","room":"living"},{"name":"TV console","type":"console","rect":[5950,80,2150,380],"h":500,"face":"north","room":"living"},{"name":"Sofa","type":"sofa","rect":[6290,3420,1780,800],"h":800,"face":"south","room":"living"},{"name":"Side table L","type":"sidetable","rect":[5640,3380,470,490],"h":550,"room":"living"},{"name":"Side table R","type":"sidetable","rect":[8110,3380,470,490],"h":550,"room":"living"},{"name":"Armchair 1","type":"armchair","rect":[5520,2160,790,830],"h":800,"face":"east","room":"living"},{"name":"Armchair 2","type":"armchair","rect":[5520,1300,790,790],"h":800,"face":"east","room":"living"},{"name":"Armchair 3","type":"armchair","rect":[8100,2200,790,800],"h":800,"face":"west","room":"living"},{"name":"Armchair 4","type":"armchair","rect":[8100,1300,790,800],"h":800,"face":"west","room":"living"},{"name":"Coffee table","type":"coffeetable","rect":[6920,1660,580,1040],"h":420,"room":"living"},{"name":"Dining table","type":"diningtable","rect":[6020,6620,2110,1060],"h":750,"seats":8,"room":"dining"},{"name":"Washer 1","type":"washer","rect":[8620,10830,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Washer 2","type":"washer","rect":[8620,10140,780,690],"h":850,"face":"west","room":"laundry"},{"name":"Laundry tub","type":"tub","rect":[6300,11000,470,520],"h":850,"face":"south","room":"laundry"},{"name":"Folding counter","type":"counter","rect":[6800,10920,1600,600],"h":900,"face":"south","room":"laundry"},{"name":"Shelving N","type":"shelving","rect":[4050,11075,1850,450],"h":2100,"face":"south","room":"storage"},{"name":"Shelving W","type":"shelving","rect":[4045,9900,450,1175],"h":2100,"face":"east","room":"storage"},{"name":"Chest freezer","type":"freezer","rect":[5250,9400,650,700],"h":850,"face":"west","room":"storage"}],"dimensions":[{"sheet":1.17,"from":[0,11600],"to":[1170,11600],"at":12550},{"sheet":1.5,"from":[1170,11600],"to":[2670,11600],"at":12550},{"sheet":1.3,"from":[2670,11600],"to":[3970,11600],"at":12550},{"sheet":2.9,"from":[-990,11100],"to":[1910,11600],"at":13150,"axis":"x"},{"sheet":2.06,"from":[1910,11600],"to":[3970,11600],"at":13150},{"sheet":5.52,"from":[3970,11600],"to":[9490,11600],"at":13150},{"sheet":0.8,"from":[9490,11600],"to":[10290,8350],"at":13150,"axis":"x"},{"sheet":10.48,"from":[-990,11100],"to":[9490,11600],"at":13750,"axis":"x"},{"sheet":1.4,"from":[-490,11600],"to":[-990,10200],"at":-1950,"axis":"y"},{"sheet":3.61,"from":[-990,10200],"to":[0,6590],"at":-1950,"axis":"y"},{"sheet":1.5,"from":[0,6590],"to":[0,5090],"at":-1950},{"sheet":5.1,"from":[0,5090],"to":[0,0],"at":-1950,"note":"The sheet's west chain 1.40 + 3.61 + 1.50 + 5.10 adds up to 11.61, but the overall is printed 11.60. One link is 10 mm out; ask the architect which."},{"sheet":1.43,"from":[0,0],"to":[0,-1430],"at":-1950},{"sheet":1.27,"from":[0,-1430],"to":[0,-2700],"at":-1950},{"sheet":11.6,"from":[-490,11600],"to":[0,0],"at":-2550,"axis":"y"},{"sheet":2.7,"from":[0,0],"to":[0,-2700],"at":-2550},{"sheet":2.62,"from":[9490,11600],"to":[9490,8980],"at":11150},{"sheet":3.26,"from":[9490,8980],"to":[10141,5720],"at":11150,"axis":"y"},{"sheet":1.59,"from":[10141,5720],"to":[9490,4130],"at":11150,"axis":"y"},{"sheet":4.13,"from":[9490,4130],"to":[8480,0],"at":11150,"axis":"y"},{"sheet":11.6,"from":[9490,11600],"to":[8480,0],"at":11750,"axis":"y"},{"sheet":1.0,"from":[0,-2700],"to":[1000,-2700],"at":-3800},{"sheet":3.25,"from":[1000,-2700],"to":[4250,-2700],"at":-3800},{"sheet":1.25,"from":[4250,-2700],"to":[5500,-2700],"at":-3800},{"sheet":2.98,"from":[5500,-2700],"to":[8480,0],"at":-3800,"axis":"x"},{"sheet":5.5,"from":[0,-2700],"to":[5500,-2700],"at":-4400}],"decor":{"rugs":[[7210,2250,3100,2400],[7075,7150,3200,2400],[1075,7540,2600,800]],"plants":[[8720,720,1],[9950,8000,1.1],[3750,10780,0.8],[5250,-1200,0.75],[4500,4450,0.95]],"floor_lamps":[[5200,3250]],"art":[[4025,2900,"east",1.3,0.9,1.55,1],[4025,7300,"east",1.6,1.05,1.55,2],[1075,10145,"south",1.5,0.7,1.45,3],[3915,6100,"west",0.55,0.75,1.5,4]]},"tour":{"path":[{"at":[4870,-900],"stop":"porch"},{"at":[4820,500]},{"at":[5000,1300],"stop":"living","look":[7400,2600]},{"at":[4750,2300]},{"at":[4750,3800]},{"at":[5300,4500]},{"at":[5200,5600]},{"at":[5000,6600],"stop":"dining","look":[9200,7200]},{"at":[4550,8650]},{"at":[4600,9350]},{"at":[4800,9650],"stop":"storage","look":[4700,11300]},{"at":[4600,9350]},{"at":[4550,8650]},{"at":[5300,8680]},{"at":[8200,8680]},{"at":[8850,8700]},{"at":[8850,9650],"stop":"laundry","look":[8300,11200]},{"at":[8850,8700]},{"at":[9600,7000]},{"at":[9100,5300]},{"at":[4700,5300]},{"at":[3350,4950]},{"at":[2900,3500],"stop":"kitchen","look":[1500,1200]},{"at":[3350,4950]},{"at":[3350,6150],"stop":"hall","look":[1800,5800]},{"at":[3350,7300]},{"at":[3300,9000],"stop":"bedroom","look":[0,8800]},{"at":[3300,10450]},{"at":[2400,10630]},{"at":[1450,10610],"stop":"tb1","look":[-500,11000]}],"points":{"porch":"Arrival from the exterior stair, straight into the living room.","living":"Glazing on two sides plus a splayed corner window.","dining":"Bay window projects 0.80 m past the line of the house.","storage":"Enclosed food storage by the dining door, with shelving on two walls and a chest freezer.","laundry":"Enclosed laundry with two washers, a tub and a folding counter, and windows on two sides.","kitchen":"L-shaped counter with a separate island and pantry wall.","hall":"Shared Toilet & Bath 2 off a private hall.","bedroom":"Twin beds, built-in wardrobes on two walls and a vanity nook.","tb1":"Ensuite with a walk-in shower behind glass."},"welcome":{"project":"Second Floor Renovation","subtitle":"Option A, with the laundry balcony enclosed as a food storage room and a laundry room","address":"","price":"","contact_name":"","contact_phone":""}}};
 const MM = 0.001;
 const H = (PLAN.meta.ceiling_height_assumed || 2700) * MM;     // ASSUMED ceiling height
 const EYE = 1.6, R = 0.22;
@@ -372,7 +402,7 @@ const house = new THREE.Group(), ceilings = new THREE.Group(), furniture = new T
 scene.add(house, ceilings, furniture, outside);
 
 /* ---------------------------------------------------------------- floors, ceilings, downlights */
-const wetRooms = new Set(['tb1', 'tb2', 'laundry']);
+const wetRooms = new Set(rooms.filter(r => r.wet).map(r => r.id));
 for (const r of rooms) {
   const shape = new THREE.Shape(r.poly.map(p => new THREE.Vector2(p[0] * MM, p[1] * MM)));
   const fg = new THREE.ExtrudeGeometry(shape, { depth: 0.2, bevelEnabled: false });
@@ -387,7 +417,7 @@ for (const r of rooms) {
 // stair landing and schematic flights (sheet shows 2nd-floor porch with a flight down and a flight up)
 Bc(house, 1.25, 0.2, 1.27, 'extFloor', 4.875, -0.2, 2.065);
 for (let i = 0; i < 11; i++) {                       // down to the ground floor, schematic
-  Bc(house, 0.28, 0.3, 1.1, 'extFloor', 4.11 - i * 0.28, -(i + 1) * 0.18 - 0.3, 2.1);
+  Bc(outside, 0.28, 0.3, 1.1, 'extFloor', 4.11 - i * 0.28, -(i + 1) * 0.18 - 0.3, 2.1);
 }
 for (let i = 0; i < 9; i++) {                        // up to the third floor, schematic
   Bc(house, 0.28, 0.18 * (i + 1), 1.15, 'extFloor', 4.11 - i * 0.28, 0, 0.75);
@@ -418,8 +448,8 @@ const wallById = Object.fromEntries(PLAN.walls.map(w => [w.id, w]));
 function sideRole(px, py) {
   const r = roomAt(px, py);
   if (!r || r.outdoor) return 'extWall';
-  if (r.id === 'tb1' || r.id === 'tb2') return 'wetWall';
-  if (r.id === 'laundry') return 'extWall';
+  if (r.open_air) return 'extWall';
+  if (r.wet) return 'wetWall';
   return 'wall';
 }
 for (const w of PLAN.walls) {
@@ -654,6 +684,24 @@ const BUILD = {
     Bc(g, Math.min(W, 0.7), 0.6, 0.02, 'mirror', 0, Hh + 0.12, -D / 2 + 0.01);
     Bc(g, 0.5, 0.02, 0.02, 'accent', W / 2 + 0.25, 1.1, -D / 2 + 0.03); Bc(g, 0.4, 0.5, 0.03, 'throw', W / 2 + 0.25, 0.62, -D / 2 + 0.05);
   },
+  shelving(g, W, D, Hh) {
+    for (const sx of [-1, 1]) Bc(g, 0.03, Hh, D, 'wood', sx * (W / 2 - 0.015), 0, 0);
+    const n = 5, r = rng(Math.round(W * 1000));
+    for (let i = 0; i < n; i++) {
+      const y = 0.08 + i * (Hh - 0.15) / (n - 1); Bc(g, W - 0.06, 0.025, D, 'wood', 0, y, 0);
+      if (i === n - 1) continue;
+      for (let x = -W / 2 + 0.1; x < W / 2 - 0.12; x += 0.13 + r() * 0.08) {
+        const k = r(), z = (r() - 0.5) * (D - 0.18);
+        if (k < 0.35) CY(g, 0.045, 0.045, 0.16 + r() * 0.08, k < 0.18 ? 'glass' : 'ceramic', x, y + 0.025, z, 12);
+        else if (k < 0.7) Bc(g, 0.1, 0.2 + r() * 0.1, 0.14, ['food', 'food2', 'throw', 'pot'][Math.floor(r() * 4)], x, y + 0.025, z);
+        else if (k < 0.85) Bc(g, 0.11, 0.24, 0.07, 'fabric2', x, y + 0.025, z);
+      }
+    }
+  },
+  freezer(g, W, D, Hh) {
+    Bc(g, W - 0.02, Hh, D - 0.02, 'ceramic', 0, 0, 0); Bc(g, W - 0.03, 0.006, 0.004, 'black', 0, Hh - 0.07, D / 2 - 0.008);
+    Bc(g, 0.3, 0.025, 0.03, 'steel', 0, Hh - 0.13, D / 2);
+  },
   shower(g, W, D) {
     Bc(g, W - 0.02, 0.025, D - 0.02, 'wetFloor', 0, 0, 0);
     Bc(g, 0.1, 0.012, 0.1, 'steel', 0, 0.026, 0);
@@ -678,7 +726,7 @@ for (const f of PLAN.furniture || []) placeItem(f);
 /* ---------------------------------------------------------------- decor that is not on the sheet (styling only) */
 function at2(x, y) { return [x * MM, -y * MM]; }
 function rug(x, y, w, d) { const m = Bc(furniture, w * MM, 0.012, d * MM, 'rug', x * MM, 0, -y * MM); m.castShadow = false; }
-rug(7210, 2250, 3100, 2400); rug(7075, 7150, 3200, 2400); rug(1075, 7540, 2600, 800);
+for (const r of PLAN.decor?.rugs || []) rug(...r);
 function plant(x, y, s = 1) {
   const g = new THREE.Group(); g.position.set(x * MM, 0, -y * MM); g.scale.setScalar(s); furniture.add(g);
   CY(g, 0.2, 0.16, 0.42, 'pot', 0, 0, 0, 24); CY(g, 0.012, 0.016, 1.0, 'trunk', 0, 0.4, 0, 6);
@@ -690,13 +738,14 @@ function plant(x, y, s = 1) {
   }
   cols.push({ x: x * MM, y: y * MM, r: 0.25 * s });
 }
-plant(8720, 720); plant(9850, 7800, 1.1); plant(3750, 10780, 0.8); plant(4400, 11250, 0.9); plant(5250, -1200, 0.75); plant(4500, 4450, 0.95);
-{ // floor lamp by the armchairs
-  const g = new THREE.Group(); g.position.set(5.2, 0, -3.25); furniture.add(g);
+for (const [x, y, sc] of PLAN.decor?.plants || []) plant(x, y, sc || 1);
+function floorLamp(xm, ym) {
+  const x = xm * MM, y = ym * MM, g = new THREE.Group(); g.position.set(x, 0, -y); furniture.add(g);
   CY(g, 0.16, 0.16, 0.02, 'accent', 0, 0, 0, 24); CY(g, 0.012, 0.012, 1.5, 'accent', 0, 0, 0, 8);
   const sh = mesh(new THREE.CylinderGeometry(0.17, 0.22, 0.3, 24, 1, true), 'shade'); sh.position.set(0, 1.55, 0); sh.castShadow = false; g.add(sh);
-  cols.push({ x: 5.2, y: 3.25, r: 0.2 });
+  cols.push({ x, y, r: 0.2 });
 }
+for (const [x, y] of PLAN.decor?.floor_lamps || []) floorLamp(x, y);
 // kitchen and bath accessories
 CY(furniture, 0.08, 0.09, 0.2, 'steel', 2.9, 0.9, -0.3, 18); CY(furniture, 0.05, 0.05, 0.18, 'ceramic', 3.3, 0.9, -0.28, 14);
 Bc(furniture, 0.4, 0.025, 0.28, 'wood', 0.38, 0.9, -2.6);
@@ -720,10 +769,7 @@ function art(x, y, face, w, h, cy, seed) {   // x,y plan mm on the wall face; w,
   const p = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m); p.position.set(0, 0, 0.032); g.add(p);
   artPieces.push({ material: m, tex: texs });
 }
-art(4025, 2900, 'east', 1.3, 0.9, 1.55, 1);
-art(4025, 7300, 'east', 1.6, 1.05, 1.55, 2);
-art(1075, 10145, 'south', 1.5, 0.7, 1.45, 3);
-art(3915, 6100, 'west', 0.55, 0.75, 1.5, 4);
+for (const a of PLAN.decor?.art || []) art(...a);
 
 /* ---------------------------------------------------------------- outside */
 const GROUND_Y = -3.2;   // ASSUMED: first-floor height is not on the sheet
@@ -752,7 +798,7 @@ void main(){ float h = vP.y; vec3 c = h > 0.0 ? mix(horizon, top, pow(h, 0.55)) 
 }`,
 }));
 scene.add(sky);
-scene.fog = new THREE.Fog(0xcfe0ea, 60, 260);
+const skyFog = new THREE.Fog(0xcfe0ea, 60, 260); scene.fog = skyFog;
 
 /* ---------------------------------------------------------------- merge static meshes per material (fewer draw calls) */
 function mergeGroup(group) {
@@ -795,7 +841,7 @@ for (const r of rooms) {
 /* ---------------------------------------------------------------- time of day */
 const C = (h) => new THREE.Color(h);
 const SKY = { day: [C('#6aa3d8'), C('#d3e5ef'), C('#7e8f6a')], gold: [C('#4f6290'), C('#f3a961'), C('#6c5a44')], night: [C('#060a14'), C('#18213a'), C('#0b0f0c')] };
-const state = { hour: 10, targetHour: 10, style: 'scandi', mode: 'walk', px: 4.87, py: -0.9, yaw: 0, pitch: -0.02, lampF: 0, started: false };
+const state = { hour: 10, targetHour: 10, style: 'scandi', mode: 'init', px: 4.87, py: -0.9, yaw: 0, pitch: -0.02, lampF: 0, preset: 'iso', rotate: true, rooms: true, dims: true };
 function hourFromSlider(v) { return 6 + 15 * v / 1000; }
 function fmtHour(h) { const hh = Math.floor(h), mm = Math.floor((h - hh) * 60 / 5) * 5; const ap = hh >= 12 ? 'PM' : 'AM'; return `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')} ${ap}`; }
 const ss = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -813,7 +859,8 @@ function applyTime(h) {
   sun.color.set('#fff4e6').lerp(tmpC.set('#ffa64d'), gold * 0.85);
   const skyMix = (i) => tmpC2.copy(SKY.day[i]).lerp(SKY.gold[i], gold * day + gold * (1 - day) * (1 - night)).lerp(SKY.night[i], night);
   sky.material.uniforms.top.value.copy(skyMix(0)); sky.material.uniforms.horizon.value.copy(skyMix(1)); sky.material.uniforms.bottom.value.copy(skyMix(2));
-  scene.fog.color.copy(skyMix(1));
+  skyFog.color.copy(skyMix(1));
+  tableBg.set('#dde3e7').lerp(tmpC.set('#262d33'), night * 0.85); tableFog.color.copy(tableBg);
   hemi.intensity = 0.15 + 2.1 * day * (1 - 0.35 * gold);
   hemi.color.copy(skyMix(0)).lerp(tmpC.set('#ffffff'), 0.55);
   hemi.groundColor.set('#d4cbbb').lerp(tmpC.set('#2a241c'), night);
@@ -879,19 +926,129 @@ stick.addEventListener('pointerup', endJoy); stick.addEventListener('pointercanc
 function moveJoy(e) { const r = stick.getBoundingClientRect(); let x = (e.clientX - r.left - r.width / 2) / (r.width / 2), y = (e.clientY - r.top - r.height / 2) / (r.height / 2); const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; } joy.x = x; joy.y = y; knob.style.transform = `translate(${x * 36}px, ${y * 36}px)`; }
 
 /* ---------------------------------------------------------------- views */
+// the drafting table the model sits on (overview only)
+const tableBg = new THREE.Color('#dde3e7'), tableFog = new THREE.Fog(0xdde3e7, 35, 95);
+const gridTex = canvasTex(1024, (g, s) => {
+  g.fillStyle = '#cfd7dc'; g.fillRect(0, 0, s, s);
+  g.strokeStyle = 'rgba(255,255,255,0.38)'; g.lineWidth = 2;
+  for (let i = 1; i < 8; i++) { const q = i * s / 8; g.beginPath(); g.moveTo(q, 0); g.lineTo(q, s); g.moveTo(0, q); g.lineTo(s, q); g.stroke(); }
+  g.strokeStyle = 'rgba(255,255,255,0.9)'; g.lineWidth = 5; g.strokeRect(0, 0, s, s);
+});
+gridTex.repeat.set(80, 80);               // one texture tile = 2 m, fine lines every 0.25 m
+const table = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshStandardMaterial({ map: gridTex, roughness: 0.92 }));
+table.rotation.x = -Math.PI / 2; table.position.set(0, -0.206, 0); table.receiveShadow = true; table.visible = false; scene.add(table);
+
+// dimension chains from the sheet, drawn on the table and measured back off the model
+const labelsEl = $('labels');
+function makeLabel(cls, html, title) { const d = document.createElement('div'); d.className = cls; d.innerHTML = html; if (title) d.title = title; labelsEl.append(d); return d; }
+const dimGroup = new THREE.Group(); dimGroup.visible = false; scene.add(dimGroup);
+const DIM_Y = -0.19, dimLabels = [];
+{
+  const pos = [], seg = (a, b) => pos.push(a[0] * MM, DIM_Y, -a[1] * MM, b[0] * MM, DIM_Y, -b[1] * MM);
+  for (const d of PLAN.dimensions || []) {
+    const [fx, fy] = d.from, [tx, ty] = d.to;
+    const vertical = d.axis ? d.axis === 'y' : Math.abs(fx - tx) < 1;
+    let a, b, len;
+    if (vertical) {
+      a = [d.at, fy]; b = [d.at, ty]; len = Math.abs(ty - fy);
+      seg([fx, fy], [d.at + Math.sign(d.at - fx) * 150, fy]); seg([tx, ty], [d.at + Math.sign(d.at - tx) * 150, ty]);
+    } else {
+      a = [fx, d.at]; b = [tx, d.at]; len = Math.abs(tx - fx);
+      seg([fx, fy], [fx, d.at + Math.sign(d.at - fy) * 150]); seg([tx, ty], [tx, d.at + Math.sign(d.at - ty) * 150]);
+    }
+    seg(a, b);
+    for (const q of [a, b]) seg([q[0] - 110, q[1] - 110], [q[0] + 110, q[1] + 110]);   // architectural ticks
+    const m = len / 1000, off = Math.abs(m - d.sheet) > 0.005;
+    const txt = off ? `${m.toFixed(2)} <i>· sheet ${d.sheet.toFixed(2)}</i>` : m.toFixed(2);
+    dimLabels.push({ el: makeLabel('dim' + (off ? ' off' : ''), txt, off ? (d.note || 'The model differs from the printed value.') : `Printed on the sheet: ${d.sheet.toFixed(2)} m`),
+      a: P3(a[0], a[1], DIM_Y), b: P3(b[0], b[1], DIM_Y) });
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  dimGroup.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x24323b })));
+}
+const roomLabels = rooms.map(r => {
+  const [cx, cy] = r.label_at || centroid(r.poly), a = areaM2(r.poly);
+  return { el: makeLabel('rl', `${r.name}<small>${a.toFixed(1)} m² · ${Math.round(a * 10.7639)} sq ft</small>`), p: P3(cx, cy, H + 0.4) };
+});
+const pa = new THREE.Vector3(), pb = new THREE.Vector3();
+const ray = new THREE.Raycaster(), rayDir = new THREE.Vector3(), mid = new THREE.Vector3();
+let occlTick = 0;
+const lastOccl = new THREE.Vector3(1e9, 0, 0);
+function updateOcclusion() {
+  const targets = [house, furniture];
+  for (const L of dimLabels) {
+    mid.addVectors(L.a, L.b).multiplyScalar(0.5);
+    rayDir.subVectors(mid, camera.position); const dist = rayDir.length(); rayDir.normalize();
+    ray.set(camera.position, rayDir); ray.far = dist - 0.05;
+    L.occluded = ray.intersectObjects(targets, true).length > 0;
+  }
+}
+function toScreen(v, out) { out.copy(v).project(camera); return out.z < 1 && out.z > -1; }
+function placeLabels() {
+  const ov = state.mode === 'overview';
+  labelsEl.hidden = !ov; if (!ov) return;
+  const w = innerWidth, h = innerHeight;
+  if (occlTick-- <= 0 || camera.position.distanceToSquared(lastOccl) > 0.04) { updateOcclusion(); lastOccl.copy(camera.position); occlTick = 8; }
+  for (const L of roomLabels) {
+    if (!state.rooms || !toScreen(L.p, pa)) { L.el.style.display = 'none'; continue; }
+    L.el.style.display = ''; L.el.style.transform = `translate(${(pa.x + 1) / 2 * w}px, ${(1 - pa.y) / 2 * h}px) translate(-50%, -50%)`;
+  }
+  for (const L of dimLabels) {
+    if (!state.dims || L.occluded || !toScreen(L.a, pa) || !toScreen(L.b, pb)) { L.el.style.display = 'none'; continue; }
+    const ax = (pa.x + 1) / 2 * w, ay = (1 - pa.y) / 2 * h, bx = (pb.x + 1) / 2 * w, by = (1 - pb.y) / 2 * h;
+    let ang = Math.atan2(by - ay, bx - ax) * 180 / Math.PI; if (ang > 90) ang -= 180; if (ang <= -90) ang += 180;
+    L.el.style.display = Math.hypot(bx - ax, by - ay) < 18 ? 'none' : '';
+    L.el.style.transform = `translate(${(ax + bx) / 2}px, ${(ay + by) / 2}px) translate(-50%, -50%) rotate(${ang}deg)`;
+  }
+}
+
 const orbit = new OrbitControls(camera, cvs);
-orbit.enabled = false; orbit.target.set(CENTER.x, 0.6, CENTER.z); orbit.enableDamping = true; orbit.maxPolarAngle = 1.32; orbit.minDistance = 6; orbit.maxDistance = 45;
+orbit.enabled = false; orbit.enableDamping = true; orbit.maxPolarAngle = 1.45; orbit.minDistance = 5; orbit.maxDistance = 70; orbit.autoRotateSpeed = 0.5;
+orbit.target.set(CENTER.x, 0, CENTER.z);
+const PRESETS = { iso: [11, 15, 15.5], top: [0, 36, 0.02], front: [0, 5, 28], side: [28, 5, 0] };
+let fly = null;
+function fitScale() { const a = innerWidth / innerHeight; return a < 1 ? Math.min(2.2, 1.05 / a) : a < 1.3 ? 1.12 : 1; }
+function presetPos(name) { const o = PRESETS[name], k = fitScale(); return new THREE.Vector3(CENTER.x + o[0] * k, o[1] * k, CENTER.z + o[2] * k); }
+function markPreset() { for (const b of $('presetGrp').children) b.setAttribute('aria-pressed', String(b.dataset.preset === state.preset)); }
+function goPreset(name, instant = false) {
+  state.preset = name; markPreset();
+  const to = presetPos(name), tgt = new THREE.Vector3(CENTER.x, 0, CENTER.z);
+  if (instant || REDUCED) { camera.position.copy(to); orbit.target.copy(tgt); orbit.update(); fly = null; return; }
+  fly = { t: 0, p0: camera.position.clone(), p1: to, t0: orbit.target.clone(), t1: tgt };
+}
+function flyStep(dt) {
+  if (!fly) return;
+  fly.t = Math.min(1, fly.t + dt / 1.0); const e = 1 - Math.pow(1 - fly.t, 3);
+  camera.position.lerpVectors(fly.p0, fly.p1, e); orbit.target.lerpVectors(fly.t0, fly.t1, e);
+  if (fly.t >= 1) fly = null;
+}
+function applyViewOffset() {
+  const ov = state.mode === 'overview' || state.mode === 'rise';
+  const wide = innerWidth > 760, panel = $('panel');
+  const dx = ov && wide ? Math.min(230, (panel.offsetWidth + 24) / 2) : 0, dy = ov ? 34 : 0;
+  if (dx || dy) camera.setViewOffset(innerWidth, innerHeight, -dx, dy, innerWidth, innerHeight); else camera.clearViewOffset();
+}
+function setRotate(on) { state.rotate = on; $('rotBtn').setAttribute('aria-pressed', String(on)); }
 function setMode(m) {
-  state.mode = m;
-  const dh = m === 'dollhouse';
-  ceilings.visible = !dh; orbit.enabled = dh;
-  camera.fov = dh ? 45 : 70; camera.updateProjectionMatrix();
-  $('viewBtn').setAttribute('aria-pressed', String(dh)); $('viewLbl').textContent = dh ? 'Walk' : 'Dollhouse';
+  const prev = state.mode; state.mode = m;
+  const ov = m === 'overview' || m === 'rise';
+  ceilings.visible = !ov; orbit.enabled = m === 'overview';
+  outside.visible = !ov; sky.visible = !ov; table.visible = ov;
+  scene.fog = ov ? tableFog : skyFog; scene.background = ov ? tableBg : null;
+  dimGroup.visible = m === 'overview' && state.dims;
+  if (m !== 'rise') { camera.fov = ov ? 35 : 70; camera.updateProjectionMatrix(); }
+  document.body.dataset.mode = m;
+  applyViewOffset();
   stick.hidden = !(TOUCH && m === 'walk');
-  if (dh) { if (document.pointerLockElement) document.exitPointerLock(); camera.position.set(CENTER.x + 9, 15, CENTER.z + 13); orbit.target.set(CENTER.x, 0.6, CENTER.z); orbit.update(); }
+  if (m === 'overview') {
+    if (document.pointerLockElement) document.exitPointerLock();
+    if (prev === 'rise') { orbit.target.set(CENTER.x, 0, CENTER.z); orbit.update(); state.preset = 'iso'; markPreset(); }
+    else goPreset(state.preset, prev === 'init');
+  }
   renderer.shadowMap.needsUpdate = true;
 }
-$('viewBtn').addEventListener('click', () => { stopTour(); setMode(state.mode === 'dollhouse' ? 'walk' : 'dollhouse'); });
+cvs.addEventListener('pointerdown', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } });
+cvs.addEventListener('wheel', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } }, { passive: true });
 
 /* ---------------------------------------------------------------- tour */
 const TP = PLAN.tour.path.map(p => ({ ...p, v: new THREE.Vector3(p.at[0] * MM, EYE, -p.at[1] * MM) }));
@@ -906,7 +1063,7 @@ const tour = { s: 0, stop: 0, pauseUntil: 0, phase: 'idle', riseT: 0, from: null
 function startTour() {
   closeSheets(); setMode('walk');
   Object.assign(tour, { s: 0, stop: 0, pauseUntil: 0, phase: 'move' });
-  state.mode = 'tour'; stick.hidden = true;
+  setMode('tour');
   $('tourLbl').textContent = 'Stop Tour'; hideHint(); music.start();
 }
 function stopTour() {
@@ -914,7 +1071,7 @@ function stopTour() {
   const wasRise = state.mode === 'rise';
   tour.phase = 'idle'; showCard(null);
   $('tourLbl').textContent = 'Start Tour';
-  setMode(wasRise ? 'dollhouse' : 'walk');
+  setMode(wasRise ? 'overview' : 'walk');
 }
 $('tourBtn').addEventListener('click', () => (state.mode === 'tour' || tour.phase === 'rise') ? stopTour() : startTour());
 function showCard(stop, idx) {
@@ -949,17 +1106,17 @@ function beginRise() {
   showCard(null);
   tour.phase = 'rise'; tour.riseT = 0;
   tour.from = { pos: camera.position.clone(), quat: camera.quaternion.clone() };
-  state.mode = 'rise'; ceilings.visible = false; renderer.shadowMap.needsUpdate = true;
+  risePos.copy(presetPos('iso')); setMode('rise');
 }
-const risePos = new THREE.Vector3(CENTER.x + 9, 15, CENTER.z + 13), riseLook = new THREE.Vector3(CENTER.x, 0.6, CENTER.z);
+const risePos = new THREE.Vector3(), riseLook = new THREE.Vector3(CENTER.x, 0, CENTER.z);
 function riseStep(dt) {
   tour.riseT = Math.min(1, tour.riseT + dt / 4.5);
   const e = tour.riseT < 0.5 ? 2 * tour.riseT ** 2 : 1 - (-2 * tour.riseT + 2) ** 2 / 2;
   camera.position.lerpVectors(tour.from.pos, risePos, e);
   const m = new THREE.Matrix4().lookAt(risePos, riseLook, new THREE.Vector3(0, 1, 0)), q = new THREE.Quaternion().setFromRotationMatrix(m);
   camera.quaternion.slerpQuaternions(tour.from.quat, q, e);
-  camera.fov = 70 - 25 * e; camera.updateProjectionMatrix();
-  if (tour.riseT >= 1) { tour.phase = 'idle'; $('tourLbl').textContent = 'Start Tour'; setMode('dollhouse'); }
+  camera.fov = 70 - 35 * e; camera.updateProjectionMatrix();
+  if (tour.riseT >= 1) { tour.phase = 'idle'; $('tourLbl').textContent = 'Start Tour'; setRotate(true); setMode('overview'); }
 }
 
 /* ---------------------------------------------------------------- music (WebAudio, no files) */
@@ -1018,14 +1175,14 @@ const toMini = (x, y) => [mox + (x - mb.x0) * msc, mini.height - moy - (y - mb.y
 function drawMini() {
   mg.clearRect(0, 0, mini.width, mini.height);
   const cur = roomAt(state.px, state.py);
-  for (const r of rooms) { mg.beginPath(); r.poly.forEach((p, i) => { const [x, y] = toMini(p[0], p[1]); i ? mg.lineTo(x, y) : mg.moveTo(x, y); }); mg.closePath(); mg.fillStyle = r === cur ? 'rgba(227,178,94,0.38)' : 'rgba(238,241,236,0.09)'; mg.fill(); }
-  mg.strokeStyle = 'rgba(238,241,236,0.85)'; mg.lineWidth = 2.2;
+  for (const r of rooms) { mg.beginPath(); r.poly.forEach((p, i) => { const [x, y] = toMini(p[0], p[1]); i ? mg.lineTo(x, y) : mg.moveTo(x, y); }); mg.closePath(); mg.fillStyle = r === cur ? 'rgba(162,112,47,0.28)' : 'rgba(29,34,38,0.06)'; mg.fill(); }
+  mg.strokeStyle = '#1f262b'; mg.lineWidth = 2.2;
   for (const w of PLAN.walls) { const [ax, ay] = toMini(w.from[0], w.from[1]), [bx, by] = toMini(w.to[0], w.to[1]); mg.globalAlpha = w.kind ? 0.45 : 1; mg.beginPath(); mg.moveTo(ax, ay); mg.lineTo(bx, by); mg.stroke(); }
   mg.globalAlpha = 1;
   if (state.mode !== 'dollhouse' && state.mode !== 'rise') {
     const [x, y] = toMini(state.px / MM, state.py / MM), a = -state.yaw - Math.PI / 2;
-    mg.fillStyle = 'rgba(227,178,94,0.35)'; mg.beginPath(); mg.moveTo(x, y); mg.arc(x, y, 30, a - 0.6, a + 0.6); mg.closePath(); mg.fill();
-    mg.fillStyle = '#e3b25e'; mg.beginPath(); mg.arc(x, y, 6, 0, 6.283); mg.fill();
+    mg.fillStyle = 'rgba(162,112,47,0.35)'; mg.beginPath(); mg.moveTo(x, y); mg.arc(x, y, 30, a - 0.6, a + 0.6); mg.closePath(); mg.fill();
+    mg.fillStyle = '#a2702f'; mg.beginPath(); mg.arc(x, y, 6, 0, 6.283); mg.fill();
   }
 }
 mini.addEventListener('click', e => {
@@ -1043,46 +1200,51 @@ for (const [id, st] of Object.entries(STYLES)) { const b = document.createElemen
 const W = PLAN.tour.welcome || {};
 const totalArea = rooms.filter(r => !r.outdoor).reduce((s, r) => s + areaM2(r.poly), 0);
 $('brandName').textContent = W.project || 'Second Floor';
-$('wTitle').textContent = W.project || 'Second Floor';
-$('wSub').textContent = W.subtitle || '';
-const facts = [];
-if (W.address) facts.push(['Address', W.address]);
-if (W.price) facts.push(['Price', W.price]);
-$('wFacts').innerHTML = ''; for (const [k, v] of facts) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; $('wFacts').append(dt, dd); }
-$('wFacts').hidden = !facts.length;
-const nBed = rooms.filter(r => /bed/i.test(r.id)).length, nBath = rooms.filter(r => /^tb/.test(r.id)).length;
-for (const t of [`${Math.round(totalArea * 10.7639).toLocaleString()} sq ft`, `${totalArea.toFixed(0)} m² under roof`, `${nBed} bedroom`, `${nBath} toilet & bath`, 'One level']) { const s = document.createElement('span'); s.textContent = t; $('facts').append(s); }
-$('wNote').innerHTML = '<b>Draft visualization.</b> Room sizes are scaled from a photo of the architect’s sheet. The ceiling height (2.70 m), wall thickness, door and window sizes are assumptions until measured. Furniture and finishes are illustrative.';
+$('pTitle').textContent = W.project || 'Second Floor';
+$('pSub').textContent = W.subtitle || '';
+{
+  const facts = [];
+  if (W.address) facts.push(['Address', W.address]);
+  if (W.price) facts.push(['Price', W.price]);
+  for (const [k, v] of facts) { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; $('pFacts').append(dt, dd); }
+  $('pFacts').hidden = !facts.length;
+  const nBed = rooms.filter(r => /bed/i.test(r.id)).length, nBath = rooms.filter(r => /^tb/.test(r.id)).length;
+  for (const t of [`${totalArea.toFixed(0)} m² under roof`, `${Math.round(totalArea * 10.7639).toLocaleString()} sq ft`, `${nBed} bedroom`, `${nBath} toilet & bath`]) { const sp = document.createElement('span'); sp.textContent = t; $('facts').append(sp); }
+  $('pNote').textContent = 'Every dimension on the table is a chain printed on the sheet, measured back off this model. Ceiling height (2.70 m), wall thickness, door and window sizes are assumptions until measured.';
+}
 const hasContact = !!(W.contact_name || W.contact_phone);
 $('contactBtn').hidden = !hasContact;
 if (hasContact) {
   $('cName').textContent = W.contact_name || ''; $('cPhone').textContent = W.contact_phone || '';
   $('callLink').href = 'tel:' + (W.contact_phone || '').replace(/[^+\d]/g, ''); $('callLink').hidden = !W.contact_phone;
   $('copyBtn').hidden = !W.contact_phone;
-  $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText(W.contact_phone); $('copyBtn').textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('cPhone')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $('copyBtn').textContent = 'Number selected'; } });
+  $('copyBtn').addEventListener('click', async () => { try { await navigator.clipboard.writeText(W.contact_phone); $('copyBtn').textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents($('cPhone')); const sl = getSelection(); sl.removeAllRanges(); sl.addRange(r); $('copyBtn').textContent = 'Number selected'; } });
 }
 const INFO = [
   'Layout traced from sheet A-01/00 Second Floor Plan, REV OCT 2025, at 1:100. Written dimensions are used as given; everything else is scaled from a phone photo of the sheet (about ±10 cm).',
+  'The dimensions on the table are the chains printed on the sheet, measured back off this model. Amber means the model differs from the printed number; hover or tap it for the reason.',
   'Ceiling height 2.70 m, wall thickness, door and window sizes and sill heights are not on the sheet. They are placeholders until measured on site.',
   'The sheet has no north arrow, so the sun path treats the top of the plan as north. Shadows show the idea, not the real orientation.',
-  'The exterior stair is drawn schematically. The floor below and the garden are stand-ins.',
-  'Furniture positions follow the sheet. Rugs, art, plants, lamps and table settings are styling only.',
+  'The exterior stair is drawn schematically. Furniture positions follow the sheet; rugs, art, plants, lamps and table settings are styling only.',
   'This model is for discussing the design. It is not a construction drawing and says nothing about structure.',
 ];
+if (PLAN.meta.change_note) INFO.splice(1, 0, PLAN.meta.change_note);
 for (const t of INFO) { const li = document.createElement('li'); li.textContent = t; $('infoList').append(li); }
-function closeSheets() { for (const id of ['welcome', 'info', 'contact']) $(id).hidden = true; }
+function closeSheets() { for (const id of ['info', 'contact']) $(id).hidden = true; }
 document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeSheets));
 $('infoBtn').addEventListener('click', () => { $('info').hidden = false; });
 $('contactBtn').addEventListener('click', () => { $('contact').hidden = false; });
 for (const id of ['info', 'contact']) $(id).addEventListener('click', e => { if (e.target.id === id) closeSheets(); });
 addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('info').hidden || !$('contact').hidden) closeSheets(); } });
-function begin(withTour) {
-  $('welcome').hidden = true; state.started = true;
-  setMode('walk'); music.start();
-  if (withTour) startTour(); else showHint();
-}
-$('startBtn').addEventListener('click', () => begin(false));
-$('startTourBtn').addEventListener('click', () => begin(true));
+for (const b of $('presetGrp').children) b.addEventListener('click', () => { setRotate(false); goPreset(b.dataset.preset); });
+$('rotBtn').addEventListener('click', () => setRotate(!state.rotate));
+$('roomsBtn').addEventListener('click', () => { state.rooms = !state.rooms; $('roomsBtn').setAttribute('aria-pressed', String(state.rooms)); });
+$('dimsBtn').addEventListener('click', () => { state.dims = !state.dims; $('dimsBtn').setAttribute('aria-pressed', String(state.dims)); dimGroup.visible = state.mode === 'overview' && state.dims; });
+function toWalk() { stopTour(); setMode('walk'); music.start(); showHint(); }
+$('walkBtn').addEventListener('click', toWalk); $('walkBtn2').addEventListener('click', toWalk);
+$('tourBtn2').addEventListener('click', () => startTour());
+$('backBtn').addEventListener('click', () => { stopTour(); setMode('overview'); });
+function begin(withTour) { if (withTour) startTour(); else toWalk(); }
 let hintShown = false;
 function showHint() {
   const h = $('hint');
@@ -1092,15 +1254,14 @@ function showHint() {
 function hideHint() { if (hintShown) { $('hint').style.opacity = '0'; hintShown = false; } }
 const slider = $('time');
 slider.addEventListener('input', () => { state.targetHour = hourFromSlider(+slider.value); });
-addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); applyViewOffset(); });
 
 /* ---------------------------------------------------------------- loop */
 applyStyle(store.get('tour-style') in STYLES ? store.get('tour-style') : 'scandi', true);
 state.hour = state.targetHour = hourFromSlider(+slider.value);
 applyTime(state.hour);
 renderer.shadowMap.needsUpdate = true;
-// welcome backdrop: slow orbit of the dollhouse
-setMode('dollhouse'); orbit.enabled = false;
+setMode('overview');
 let last = performance.now(), fpsAcc = 0, fpsN = 0, lastShadowHour = state.hour, idleSpin = 0;
 let lastRoom = null, roomTagTimer = 0;
 function frame(now) {
@@ -1113,10 +1274,8 @@ function frame(now) {
   }
   // style colours, eased
   for (const [role, c] of Object.entries(target)) M[role].color.lerp(c, 1 - Math.exp(-dt * 6));
-  if (!state.started) {
-    idleSpin += dt * 0.06;
-    camera.position.set(CENTER.x + Math.cos(idleSpin) * 17, 14, CENTER.z + Math.sin(idleSpin) * 17); camera.lookAt(CENTER.x, 0.5, CENTER.z);
-  } else if (state.mode === 'walk') {
+  if (state.mode === 'overview') { flyStep(dt); orbit.autoRotate = state.rotate && !fly; orbit.update(); }
+  else if (state.mode === 'walk') {
     let f = 0, s = 0;
     if (keys.has('KeyW') || keys.has('ArrowUp')) f += 1;
     if (keys.has('KeyS') || keys.has('ArrowDown')) f -= 1;
@@ -1134,15 +1293,15 @@ function frame(now) {
     }
   } else if (state.mode === 'tour') tourStep(dt, now);
   else if (state.mode === 'rise') riseStep(dt);
-  if (state.started && (state.mode === 'walk' || state.mode === 'tour')) {
+  if (state.mode === 'walk' || state.mode === 'tour') {
     camera.position.set(state.px, EYE, -state.py); camera.rotation.set(state.pitch, state.yaw, 0);
     const room = roomAt(state.px, state.py);
     if (room !== lastRoom) { lastRoom = room; const t = $('roomTag'); if (room) { t.textContent = room.name; t.style.opacity = '1'; clearTimeout(roomTagTimer); roomTagTimer = setTimeout(() => { t.style.opacity = '0'; }, 2600); } }
   }
-  if (state.mode === 'dollhouse' && state.started) orbit.update();
   sky.position.copy(camera.position);
   renderer.render(scene, camera);
-  drawMini();
+  if (state.mode === 'walk' || state.mode === 'tour') drawMini();
+  placeLabels();
   // keep frame rate up on slower machines
   fpsAcc += dt; fpsN++;
   if (fpsAcc > 2) { const fps = fpsN / fpsAcc; if (fps < 38 && pixelRatio > 0.8) { pixelRatio = Math.max(0.75, pixelRatio - 0.2); renderer.setPixelRatio(pixelRatio); renderer.setSize(innerWidth, innerHeight); } fpsAcc = 0; fpsN = 0; }
@@ -1150,7 +1309,7 @@ function frame(now) {
 }
 $('loading').remove();
 requestAnimationFrame(frame);
-window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms };
+window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms, goPreset, setRotate, dimLabels };
 </script>
 
 </body>
