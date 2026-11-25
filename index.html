@@ -1153,6 +1153,7 @@ function placeLabels() {
 
 const orbit = new OrbitControls(camera, cvs);
 orbit.enabled = false; orbit.enableDamping = true; orbit.maxPolarAngle = 1.45; orbit.minDistance = 5; orbit.maxDistance = 70; orbit.autoRotateSpeed = 0.5;
+orbit.zoomSpeed = 0.5; orbit.rotateSpeed = 0.7; orbit.dampingFactor = 0.08;   // gentler pinch and orbit
 orbit.target.set(CENTER.x, 0, CENTER.z);
 const PRESETS = { iso: [0, 17.5, 16], top: [0, 36, 0.02], front: [0, 5, 28], side: [28, 5, 0] };   // iso looks north, like the sheet
 let fly = null;
@@ -1199,7 +1200,29 @@ function setMode(m) {
   renderer.shadowMap.needsUpdate = true;
 }
 cvs.addEventListener('pointerdown', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } });
-cvs.addEventListener('wheel', () => { if (state.mode === 'overview') { if (state.rotate) setRotate(false); fly = null; } }, { passive: true });
+// Scroll zoom: OrbitControls moves a fixed step per wheel event, which jumps on trackpads and
+// smooth-scroll mice. Take the wheel here instead: the step follows how far you scrolled, and the
+// camera eases to the new distance.
+let zoomGoal = null;
+stage.addEventListener('wheel', (e) => {
+  if (state.mode !== 'overview') return;
+  e.preventDefault(); e.stopPropagation();
+  if (state.rotate) setRotate(false);
+  fly = null;
+  let dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 400 : 1);
+  if (e.ctrlKey) dy *= 2.5;                                  // trackpad pinch arrives as small ctrl+wheel deltas
+  dy = Math.max(-120, Math.min(120, dy));
+  const cur = zoomGoal ?? camera.position.distanceTo(orbit.target);
+  zoomGoal = THREE.MathUtils.clamp(cur * Math.exp(dy * 0.0011), orbit.minDistance, orbit.maxDistance);
+}, { capture: true, passive: false });
+function zoomStep(dt) {
+  if (zoomGoal == null) return;
+  if (fly) { zoomGoal = null; return; }
+  const off = camera.position.clone().sub(orbit.target), d = off.length();
+  const nd = d + (zoomGoal - d) * (1 - Math.exp(-dt * 9));
+  camera.position.copy(orbit.target).addScaledVector(off.normalize(), nd);
+  if (Math.abs(zoomGoal - nd) < 0.002) zoomGoal = null;
+}
 
 /* ---------------------------------------------------------------- explore: select rooms and sections */
 const hl = new THREE.Group(); scene.add(hl);
@@ -1645,7 +1668,7 @@ function frame(now) {
   }
   // style colours, eased
   for (const [role, c] of Object.entries(target)) M[role].color.lerp(c, 1 - Math.exp(-dt * 6));
-  if (state.mode === 'overview') { flyStep(dt); orbit.autoRotate = state.rotate && !fly; orbit.update(); }
+  if (state.mode === 'overview') { flyStep(dt); zoomStep(dt); orbit.autoRotate = state.rotate && !fly; orbit.update(); }
   else if (state.mode === 'walk') {
     let f = 0, s = 0;
     if (keys.has('KeyW') || keys.has('ArrowUp')) f += 1;
@@ -1680,7 +1703,7 @@ function frame(now) {
 }
 $('loading').remove();
 requestAnimationFrame(frame);
-window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms, goPreset, setRotate, dimLabels, select, frameSelection, ghosted: () => [...ghosted] };
+window.__tour = { state, startTour, setMode, applyStyle, applyTime, camera, renderer, begin, blocked, roomAt, pointAt, totalLen, rooms, goPreset, setRotate, dimLabels, select, frameSelection, ghosted: () => [...ghosted], zoomStep };
 </script>
 
 </body>
