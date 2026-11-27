@@ -718,7 +718,7 @@ const BUILD = {
     Bc(g, W - 0.7, 0.06, 0.06, 'wood', 0, Hh - 0.12, 0);
     const seats = [];
     for (let i = 0; i < 3; i++) { const sx = -W / 2 + W * (i + 0.5) / 3; seats.push([sx, D / 2 + 0.3, Math.PI], [sx, -D / 2 - 0.3, 0]); }
-    seats.push([-W / 2 - 0.3, 0, -Math.PI / 2], [W / 2 + 0.3, 0, Math.PI / 2]);
+    seats.push([-W / 2 - 0.3, 0, Math.PI / 2], [W / 2 + 0.3, 0, -Math.PI / 2]);   // end chairs: local +z (seat front, place setting) faces the table
     for (const [sx, sz, a] of seats) {
       const c = new THREE.Group(); c.position.set(sx, 0, sz); c.rotation.y = a; g.add(c);
       RB(c, 0.46, 0.07, 0.44, 'fabric2', 0, 0.43, 0, 0.025);
