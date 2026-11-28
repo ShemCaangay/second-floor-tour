@@ -531,6 +531,28 @@ function sideRole(px, py) {
 }
 const wallParts = {};
 function tagWall(id, o) { (wallParts[id] ||= []).push(o); o.userData.wallId = id; o.userData.keep = true; return o; }
+// How far each wall end runs past its endpoint. Ends that ran a full half-thickness into a neighbour put their end face
+// in the same plane as the neighbour's far face (or overlapped a straight continuation face-on-face), which z-fights
+// and flickers as the camera moves. So: flush where a wall continues in a straight line, stop 3 mm short of the far
+// face where it meets another wall at an angle (or 2 mm past it for one wall of an L-corner), and keep the half-thickness only at free ends.
+const SOLID_KIND = w => !w.kind || w.kind === 'wall';
+function endExt(w, p) {
+  const ux = w.to[0] - w.from[0], uy = w.to[1] - w.from[1], ul = Math.hypot(ux, uy);
+  let best = null;
+  for (const o of PLAN.walls) {
+    if (o === w || !SOLID_KIND(o)) continue;
+    const vx = o.to[0] - o.from[0], vy = o.to[1] - o.from[1], vl = Math.hypot(vx, vy);
+    const s = ((p[0] - o.from[0]) * vx + (p[1] - o.from[1]) * vy) / (vl * vl), d = Math.abs((p[0] - o.from[0]) * vy - (p[1] - o.from[1]) * vx) / vl;
+    if (d > 5 || s < -0.001 || s > 1.001) continue;           // p is not on wall o
+    if (Math.abs(ux * vy - uy * vx) / (ul * vl) < 0.01) return 0;   // straight continuation: meet flush
+    // L-corner (p is also an end of o): one wall of the pair runs 2 mm past the other's outer face so the corner is closed,
+    // the other stops 3 mm inside; at a T (p mid-way along o) the stem stops 3 mm inside the wall it meets
+    const corner = s < 0.001 || s > 0.999;
+    best = Math.max(best ?? -1, corner && w.id < o.id ? o.t / 2 + 2 : o.t / 2 - 3);
+  }
+  return (best ?? w.t / 2) * MM;
+}
+let wallIdx = 0;
 for (const w of PLAN.walls) {
   const ax = w.from[0] * MM, ay = w.from[1] * MM, bx = w.to[0] * MM, by = w.to[1] * MM;
   const L = Math.hypot(bx - ax, by - ay), ux = (bx - ax) / L, uy = (by - ay) / L, nx = -uy, ny = ux;
@@ -539,7 +561,10 @@ for (const w of PLAN.walls) {
   const left = sideRole(mx + nx * off, my + ny * off), right = sideRole(mx - nx * off, my - ny * off);
   const mats = [mat(left), mat(left), mat(left), mat(left), mat(right), mat(left)];
   const at = (s, hgt) => new THREE.Vector3(ax + ux * s, hgt, -(ay + uy * s));
+  const e0 = SOLID_KIND(w) ? endExt(w, w.from) : t / 2, e1 = SOLID_KIND(w) ? endExt(w, w.to) : t / 2;
+  const topH = H - (wallIdx++ % 4) * 0.002;   // tops of overlapping walls a hair apart, so they don't z-fight from above
   const piece = (s0, s1, y0, y1) => {
+    if (y1 >= H) y1 = topH;
     if (s1 - s0 < 0.005 || y1 - y0 < 0.005) return;
     const m = new THREE.Mesh(box(s1 - s0, y1 - y0, t), mats);
     m.position.copy(at((s0 + s1) / 2, (y0 + y1) / 2)); m.rotation.y = theta; m.castShadow = m.receiveShadow = true; house.add(tagWall(w.id, m));
@@ -558,7 +583,7 @@ for (const w of PLAN.walls) {
     segs.push({ ax, ay, bx, by, t: 0.04 }); continue;
   }
   const ops = (PLAN.openings || []).filter(o => o.wall === w.id).map(o => ({ ...o, s0: o.offset * MM, s1: (o.offset + o.width) * MM })).sort((a, b) => a.s0 - b.s0);
-  let cur = -t / 2, solidStart = -t / 2;
+  let cur = -e0, solidStart = -e0;
   const solid = [];
   for (const o of ops) {
     piece(cur, o.s0, -0.2, H);
@@ -573,7 +598,7 @@ for (const w of PLAN.walls) {
     }
     cur = o.s1;
   }
-  piece(cur, L + t / 2, -0.2, H); solid.push([solidStart, L + t / 2]);
+  piece(cur, L + e1, -0.2, H); solid.push([solidStart, L + e1]);
   for (const [s0, s1] of solid) segs.push({ ax: ax + ux * Math.max(s0, 0), ay: ay + uy * Math.max(s0, 0), bx: ax + ux * Math.min(s1, L), by: ay + uy * Math.min(s1, L), t });
 }
 // PROPOSED floor-to-ceiling glass on an exterior wall line: floor + ceiling channels, butt-jointed panes, green-tinted edges
@@ -635,7 +660,8 @@ const cols = [];
 for (const [px, py] of CW.posts || []) cols.push({ x: px * MM, y: py * MM, r: (CW.post || 100) * MM / 2 + 0.02 });
 for (const c of PLAN.columns || []) {
   const s = c.size * MM, x = c.at[0] * MM, y = c.at[1] * MM;
-  if (c.round) CY(house, s / 2, s / 2, H + 0.2, 'column', x, -0.2, -y, 28); else Bc(house, s, H + 0.2, s, 'column', x, -0.2, -y);
+  // 4 mm proud of any wall it sits in, and 2 mm above the wall tops, so no column face shares a plane with a wall face
+  if (c.round) CY(house, s / 2 + 0.002, s / 2 + 0.002, H + 0.202, 'column', x, -0.2, -y, 28); else Bc(house, s + 0.004, H + 0.202, s + 0.004, 'column', x, -0.2, -y);
   cols.push({ x, y, r: s / 2 + 0.02 });
 }
 
